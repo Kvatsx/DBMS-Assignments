@@ -1,0 +1,4 @@
+Field Name, Type, Size
+Holder Name, Character, 20
+Balance, Float, 5
+Bank Name, Character, 40

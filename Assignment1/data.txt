@@ -1,0 +1,5 @@
+Bank Name, Holder Name, Account Number, Balance
+State Bank India, Kaustav Vats, 2016048, 5000
+Allahabad Bank, Yashit Maheshwary, 2016123, 10000
+Punjab National Bank, Bhand, 2016143, 250.50
+Patiala Bank, Bassi, 2016230, 98.88

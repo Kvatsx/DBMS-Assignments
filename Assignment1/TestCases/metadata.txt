@@ -1,0 +1,3 @@
+Field Name, Type, Size
+ID, Integer, 4
+Status, Character, 10
