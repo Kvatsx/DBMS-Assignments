@@ -84,17 +84,14 @@ public class Flight {
 	}
 
 	public void book(int passengerId) {
-		Passenger passenger = getPassenger(passengerId);
-		if(passenger != null)
-			if(getNumReserved() < this.seats)
-				if(!this.passengers.contains(passenger))
-					this.passengers.add(passenger);
-				else
-					System.out.println("Passenger Already Booked this Flight.");
+		Passenger passenger = new Passenger(passengerId);
+		if(getNumReserved() < this.seats)
+			if(!this.passengers.contains(passenger))
+				this.passengers.add(passenger);
 			else
-				System.out.println("No more seats available.");
+				System.out.println("Passenger Already Booked this Flight.");
 		else
-			System.out.println("Passenger doesn't exist.");
+			System.out.println("No more seats available.");
 			
 	}
 
@@ -104,8 +101,9 @@ public class Flight {
 		if(passenger != null) {
 			for(Passenger p : this.passengers) {
 				if(p.getId() == passenger.getId()) {
-					this.passengers.remove(this.passengers.indexOf(passenger));
+					this.passengers.remove(p);
 					passengerFound = true;
+					break;
 				}
 			}
 			if(!passengerFound)

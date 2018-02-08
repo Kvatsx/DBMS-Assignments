@@ -6,7 +6,7 @@
 import java.io.*;
 import java.util.*;
 
-class Transaction {
+class Transaction1 {
 
 	/**
 	 * Function to reserve a seat in a flight for a passenger
@@ -39,6 +39,8 @@ class Transaction {
 				totalReservations += flight.getNumReserved();
 			}
 		}
+		System.out.println("Total Number of Reservations are: " + String.valueOf(totalReservations));
+		
 	}
 
 	/**
@@ -54,7 +56,7 @@ public class Main {
 
 	public static ArrayList<Flight> flights = new ArrayList<>();
 
-	public static void main(String[] args) throws IOException {
+	public static void main(String[] args) throws IOException, InterruptedException {
 
 		flights.add(new Flight(1, 10));
 		flights.add(new Flight(2, 10));
@@ -67,9 +69,17 @@ public class Main {
 		flights.add(new Flight(9, 10));
 		flights.add(new Flight(10, 10));
 
-		Transaction transaction = new Transaction();
-		transaction.Total_Reservations();
+		Passenger p1 = new Passenger(1);
+		Passenger p2 = new Passenger(2);
+		Passenger p3 = new Passenger(3);
+		Passenger p4 = new Passenger(4);
+		Passenger p5 = new Passenger(5);
 
+		Transaction1 transaction = new Transaction1();
+		transaction.Reserve(flights.get(0), 1);
+		transaction.Total_Reservations();
+		transaction.Cancel(flights.get(0), 1);
+		transaction.Total_Reservations();
 
 	}
 }
