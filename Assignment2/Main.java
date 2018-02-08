@@ -7,18 +7,31 @@ import java.io.*;
 import java.util.*;
 
 class Transaction {
+
+	/**
+	 * Function to reserve a seat in a flight for a passenger
+	 */
 	public void Reserve(Flight flight, int passengerId) {
 		flight.book(passengerId);
 	}
 
+	/**
+	 * Function to cancel a reservation of a flight for a passenger
+	 */
 	public void Cancel(Flight flight, int passengerId) {
 		flight.cancel(passengerId);
 	}
 
+	/**
+	 * Function to print the flights of a particular passenger
+	 */
 	public void My_Flights(int passengerId) {
 		// Get all flights of a passenger
 	}
 
+	/**
+	 * Function to print the total number of reservations made in all the flights
+	 */
 	public void Total_Reservations() {
 		int totalReservations = 0;
 		for(Flight flight: Main.flights) {
@@ -28,6 +41,9 @@ class Transaction {
 		}
 	}
 
+	/**
+	 * Function to Transfer the user from one flight to the other
+	 */
 	public void Transfer(Flight f1, Flight f2, int passengerId) {
 		// Replace passenger from flight f1 to f2
 	}
