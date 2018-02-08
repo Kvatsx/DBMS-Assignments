@@ -1,6 +1,6 @@
 /* ******************************************
 *  Yashit Maheshwary (2016123)
-*  Kaustav (2016048)
+*  Kaustav Vats (2016048)
 ******************************************* */
 
 import java.io.*;
@@ -20,7 +20,12 @@ class Transaction {
 	}
 
 	public void Total_Reservations() {
-		// Get all reservations in all flights
+		int totalReservations = 0;
+		for(Flight flight: Main.flights) {
+			if(flight.getNumReserved() > 0) {
+				totalReservations += flight.getNumReserved();
+			}
+		}
 	}
 
 	public void Transfer(Flight f1, Flight f2, int passengerId) {
@@ -29,9 +34,26 @@ class Transaction {
 }
 
 public class Main {
-	public static void main(String[] args) throws IOException{
-		BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
-		String[] inputString = input.readLine().split(" ");
-		
+
+
+	public static ArrayList<Flight> flights = new ArrayList<>();
+
+	public static void main(String[] args) throws IOException {
+
+		flights.add(new Flight(1, 10));
+		flights.add(new Flight(2, 10));
+		flights.add(new Flight(3, 10));
+		flights.add(new Flight(4, 10));
+		flights.add(new Flight(5, 10));
+		flights.add(new Flight(6, 10));
+		flights.add(new Flight(7, 10));
+		flights.add(new Flight(8, 10));
+		flights.add(new Flight(9, 10));
+		flights.add(new Flight(10, 10));
+
+		Transaction transaction = new Transaction();
+		transaction.Total_Reservations();
+
+
 	}
 }
