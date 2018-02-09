@@ -51,7 +51,18 @@ class Transaction {
 	 * Function to Transfer the user from one flight to the other
 	 */
 	public void Transfer(Flight f1, Flight f2, int passengerId) {
-		// Replace passenger from flight f1 to f2
+		if(f1.getPassenger(passengerId) != null) {
+			if(f2.getPassengers().size() < f2.getSeats()) {
+				f1.cancel(passengerId);
+				f2.book(passengerId);
+			}
+			else {
+				System.out.println("No more seats available");
+			}
+		}
+		else {
+			System.out.println("Passenger hasn't booked this flight");
+		}
 	}
 }
 
@@ -78,7 +89,7 @@ public class Main {
 
 		while(true) {
 
-			int randomNum = getRand(1,4);
+			int randomNum = getRand(1,5);
 
 			int randomFlight = getRand(0, flights.size()-1);
 			Flight selectedFlight = flights.get(randomFlight);
@@ -97,6 +108,11 @@ public class Main {
 			}
 			else if(randomNum == 4) {
 				transaction.Total_Reservations();
+			}
+			else if(randomNum == 5) {
+				int randomFlight2 = getRand(0, flights.size() - 1);
+				Flight selectedFlight2 = flights.get(randomFlight);
+				transaction.Transfer(selectedFlight, selectedFlight2, selectedPassenger.getId());
 			}
 			else {
 				System.out.println("Invalid Condition");
