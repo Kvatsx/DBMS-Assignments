@@ -83,19 +83,26 @@ public class Flight {
 		return null;
 	}
 
-	public void book(int passengerId) {
+	public boolean book(int passengerId) {
 		Passenger passenger = new Passenger(passengerId);
-		if(getNumReserved() < this.seats)
-			if(!this.passengers.contains(passenger))
+		if(getNumReserved() < this.seats) {
+			if(!this.passengers.contains(passenger)) {
 				this.passengers.add(passenger);
-			else
+				return true;
+			}
+			else {
 				System.out.println("Passenger Already Booked this Flight.");
-		else
+				return false;
+			}
+		}
+		else {
 			System.out.println("No more seats available.");
+			return false;
+		}
 			
 	}
 
-	public void cancel(int passengerId) {
+	public boolean cancel(int passengerId) {
 		Passenger passenger = getPassenger(passengerId);
 		boolean passengerFound = false;
 		if(passenger != null) {
@@ -103,32 +110,17 @@ public class Flight {
 				if(p.getId() == passenger.getId()) {
 					this.passengers.remove(p);
 					passengerFound = true;
-					break;
+					return true;
 				}
 			}
-			if(!passengerFound)
+			if(!passengerFound) {
 				System.out.println("No Passenger Found");
+				return false;
+			}
 		}
 		else {
-			System.out.println("Passenger doesn't exist.");
+			System.out.println("Passenger hasn't booked this flight.");
 		}
-	}
-
-	public void getAllFlights(int passengerId) {
-		Passenger passenger = getPassenger(passengerId);
-		boolean passengerFound = false;
-		if (passenger != null) {
-			for (Passenger p : this.passengers) {
-				if (p.getId() == passenger.getId()) {
-					this.passengers.remove(p);
-					passengerFound = true;
-					break;
-				}
-			}
-			if (!passengerFound)
-				System.out.println("No Passenger Found");
-		} else {
-			System.out.println("Passenger doesn't exist.");
-		}
+		return false;
 	}
 }

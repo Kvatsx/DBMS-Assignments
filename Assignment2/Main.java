@@ -12,21 +12,25 @@ class Transaction {
 	 * Function to reserve a seat in a flight for a passenger
 	 */
 	public void Reserve(Flight flight, int passengerId) {
-		flight.book(passengerId);
+		if(flight.book(passengerId)) {
+			Main.passengers.get(passengerId).addBookedFlight(flight);
+		}
 	}
 
 	/**
 	 * Function to cancel a reservation of a flight for a passenger
 	 */
 	public void Cancel(Flight flight, int passengerId) {
-		flight.cancel(passengerId);
+		if(flight.cancel(passengerId)) {
+			Main.passengers.get(passengerId).removeBookedFlight(flight);
+		}
 	}
 
 	/**
 	 * Function to print the flights of a particular passenger
 	 */
 	public void My_Flights(int passengerId) {
-		flight.getAllFlights(passengerId);
+		Main.passengers.get(passengerId).getAllFlights();
 	}
 
 	/**
@@ -54,30 +58,54 @@ class Transaction {
 public class Main {
 
 	public static ArrayList<Flight> flights = new ArrayList<>();
+	public static ArrayList<Passenger> passengers = new ArrayList<>();
 
-	public static void main(String[] args) throws IOException, InterruptedException {
+	private static int getRand(int min, int max) {
+		Random r = new Random();
+		return r.nextInt((max - min) + 1) + min;
+	}
 
-		flights.add(new Flight(1, 10));
-		flights.add(new Flight(2, 10));
-		flights.add(new Flight(3, 10));
-		flights.add(new Flight(4, 10));
-		flights.add(new Flight(5, 10));
-		flights.add(new Flight(6, 10));
-		flights.add(new Flight(7, 10));
-		flights.add(new Flight(8, 10));
-		flights.add(new Flight(9, 10));
-		flights.add(new Flight(10, 10));
-
-		Passenger p1 = new Passenger(1);
-		Passenger p2 = new Passenger(2);
-		Passenger p3 = new Passenger(3);
-		Passenger p4 = new Passenger(4);
-		Passenger p5 = new Passenger(5);
-
+	public static void main(String[] args) throws IOException {
+		
 		Transaction transaction = new Transaction();
-		transaction.Reserve(flights.get(0), 1);
-		transaction.Total_Reservations();
-		transaction.Cancel(flights.get(0), 1);
-		transaction.Total_Reservations();
+
+		for(int i=0; i<=10; i++) {
+			flights.add(new Flight(i,2));
+			passengers.add(new Passenger(i));
+		}
+
+		int counter = 0;
+
+		while(true) {
+
+			int randomNum = getRand(1,4);
+
+			int randomFlight = getRand(0, flights.size()-1);
+			Flight selectedFlight = flights.get(randomFlight);
+
+			int randomPassenger = getRand(0, passengers.size()-1);
+			Passenger selectedPassenger = passengers.get(randomPassenger);
+			
+			if(randomNum == 1) {
+				transaction.Reserve(selectedFlight, selectedPassenger.getId());
+			}
+			else if(randomNum == 2) {
+				transaction.Cancel(selectedFlight, selectedPassenger.getId());
+			}
+			else if(randomNum == 3) {
+				transaction.My_Flights(selectedPassenger.getId());
+			}
+			else if(randomNum == 4) {
+				transaction.Total_Reservations();
+			}
+			else {
+				System.out.println("Invalid Condition");
+			}
+
+			if(counter == 100) {
+				break;
+			}
+			counter += 1;
+		}	
 	}
 }
