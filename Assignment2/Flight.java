@@ -8,9 +8,9 @@ import java.util.*;
 
 public class Flight {
 	
-	private ArrayList<Passenger> passengers;
-	private int seats;
-	private int id;
+	private volatile ArrayList<Passenger> passengers;
+	private volatile int seats;
+	private volatile int id;
 
 	// Constructors
 
@@ -110,6 +110,24 @@ public class Flight {
 				System.out.println("No Passenger Found");
 		}
 		else {
+			System.out.println("Passenger doesn't exist.");
+		}
+	}
+
+	public void getAllFlights(int passengerId) {
+		Passenger passenger = getPassenger(passengerId);
+		boolean passengerFound = false;
+		if (passenger != null) {
+			for (Passenger p : this.passengers) {
+				if (p.getId() == passenger.getId()) {
+					this.passengers.remove(p);
+					passengerFound = true;
+					break;
+				}
+			}
+			if (!passengerFound)
+				System.out.println("No Passenger Found");
+		} else {
 			System.out.println("Passenger doesn't exist.");
 		}
 	}

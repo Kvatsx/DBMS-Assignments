@@ -8,7 +8,7 @@ import java.util.*;
 
 public class Passenger {
 
-	private int id;
+	private volatile int id;
 
 	// Constructor
 
