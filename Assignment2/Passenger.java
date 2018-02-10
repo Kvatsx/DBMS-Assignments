@@ -6,7 +6,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Passenger {
+public class Passenger implements Serializable {
 
 	private volatile int id;
 	private volatile ArrayList<Flight> bookedFlights;

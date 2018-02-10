@@ -6,7 +6,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Flight {
+public class Flight implements Seializable {
 	
 	private volatile ArrayList<Passenger> passengers;
 	private volatile int seats;

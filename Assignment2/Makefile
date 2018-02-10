@@ -9,3 +9,9 @@ Flight.class: Flight.java
 
 Passenger.class: Passenger.java
 	javac Passenger.java
+
+clean:
+	rm Flight.class
+	rm Passenger.class
+	rm Main.class
+	rm Transaction.class
