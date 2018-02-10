@@ -5,6 +5,8 @@
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 class Transaction implements Runnable {
 
@@ -15,6 +17,12 @@ class Transaction implements Runnable {
 		this.flights = Main.getFlights();
 		this.passengers = Main.getPassengers();
 	}
+
+	@Override
+	public void run() {
+		System.out.println("lol");
+	}
+
 	/**
 	 * Function to reserve a seat in a flight for a passenger
 	 */
@@ -109,14 +117,12 @@ public class Main implements Serializable {
 		try {
 			in = new ObjectInputStream(new FileInputStream("Program_1_data.txt"));
 			Main a = (Main) in.readObject();
+			return a;
 		}
 		finally {
 			in.close();
 		}
-		return a;
 	}
-
-	public void 
 
 	public static void main(String[] args) throws IOException {
 		
