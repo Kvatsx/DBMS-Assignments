@@ -9,8 +9,6 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.concurrent.TimeUnit;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 
 class Transaction implements Runnable {
@@ -43,10 +41,7 @@ class Transaction implements Runnable {
 	@Override
 	public void run() {
 
-		Main.lock.lock();
 		try {
-			
-            System.out.println("Lock Hold Count - "+ Main.lock.getHoldCount());
 
 			if(option == 1) {
 				Reserve(f1, passengerId);
@@ -69,11 +64,6 @@ class Transaction implements Runnable {
 			else {
 				System.out.println("Invalid Condition");
 			}
-
-		}
-		finally {
-			Main.lock.unlock();
-			System.out.println("option - " + this.option + " releasing inner lock");
 		}
 	}
 
@@ -140,6 +130,8 @@ public class Main {
 	public static ArrayList<Flight> flights = new ArrayList<>();
 	public static ArrayList<Passenger> passengers = new ArrayList<>();
 	public static ReentrantLock lock = new ReentrantLock();
+	public static ArrayList<ReentrantLock> flights_lock = new ArrayList<ReentrantLock>();
+	public static ArrayList<ReentrantLock> passengers_lock = new ArrayList<ReentrantLock>();
 	// private ArrayList<Flight> flights = new ArrayList<>();
 	// private ArrayList<Passenger> passengers = new ArrayList<>();
 
@@ -188,7 +180,8 @@ public class Main {
 		for(int i=0; i<=10; i++) {
 			flights_local.add(new Flight(i,2));
 			passengers_local.add(new Passenger(i));
-
+			flights_lock.add(new ReentrantLock());
+			passengers_lock.add(new ReentrantLock());
 		}
 		int counter = 0;
 
@@ -222,6 +215,7 @@ public class Main {
 			}
 			counter += 1;
 		}
+
 		if ( !exec.isTerminated() )
 		{
 			exec.shutdown();
