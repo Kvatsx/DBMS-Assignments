@@ -41,6 +41,13 @@ class Transaction implements Runnable {
 	{
 		this.passengerId = i;
 	}
+	private static void sleep() {
+		try {
+			Thread.sleep(10);
+		} 
+		catch (InterruptedException e) {
+		}
+	}
 	@Override
 	public void run() {
 
@@ -71,6 +78,7 @@ class Transaction implements Runnable {
 			else {
 				System.out.println("Invalid Condition");
 			}
+			sleep();
 
 		}
 		finally {
@@ -233,7 +241,7 @@ public class Main {
 		if ( !exec.isTerminated() )
 		{
 			exec.shutdownNow();
-			// exec.awaitTermination(1L, TimeUnit.SECONDS);
+			// exec.awaitTermination(L, TimeUnit.MILLISECONDS);
 		}	
 	}
 }
