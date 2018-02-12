@@ -17,6 +17,7 @@ class Transaction implements Runnable {
 
 	private Flight f1, f2;
 	private int passengerId;
+	public static int trasnsaction_count = 0;
 	private int option;
 
 	public Transaction(){
@@ -46,6 +47,7 @@ class Transaction implements Runnable {
 		Main.lock.lock();
 		try {
 			
+			trasnsaction_count++;
             System.out.println("Lock Hold Count - "+ Main.lock.getHoldCount());
 
 			if(option == 1) {
@@ -218,6 +220,7 @@ public class Main {
 
 
 			if(counter == 10) {
+				System.out.println("Transaction: "+Transaction.trasnsaction_count);
 				break;
 			}
 			counter += 1;

@@ -16,6 +16,7 @@ class Transaction implements Runnable {
 	private Flight f1, f2;
 	private int passengerId;
 	private int option;
+	public static int transaction_count = 0;
 
 	public Transaction(){
 		this.option = -1;
@@ -62,6 +63,7 @@ class Transaction implements Runnable {
 		else {
 			System.out.println("Invalid Condition");
 		}
+		transaction_count++;
 	}
 
 	/**
@@ -257,6 +259,7 @@ public class prog2 {
 
 
 			if(counter == 10) {
+				System.out.println("Transaction: "+Transaction.transaction_count);
 				break;
 			}
 			counter += 1;
