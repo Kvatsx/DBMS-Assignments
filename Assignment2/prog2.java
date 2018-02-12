@@ -220,7 +220,7 @@ public class prog2 {
 	// }
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-		
+		long start_time = System.currentTimeMillis();
 		prog2 Database = new prog2();
 		ArrayList<Flight> flights_local =prog2.getFlights();
 		ArrayList<Passenger> passengers_local = prog2.getPassengers();
@@ -235,7 +235,11 @@ public class prog2 {
 
 		ExecutorService exec = Executors.newFixedThreadPool(3);
 
-		while(true) {
+		long wait_time = 10000;
+		long end_time = start_time + wait_time;
+
+
+		while(System.currentTimeMillis() < end_time) {
 
 			int randomNum = getRand(1,5);
 			System.out.println("randomNum: "+randomNum);
@@ -258,17 +262,17 @@ public class prog2 {
 			exec.execute(transaction);
 
 
-			if(counter == 10) {
+			// if(counter == 10) {
 				System.out.println("Transaction: "+Transaction.transaction_count);
-				break;
-			}
-			counter += 1;
+			// 	break;
+			// }
+			// counter += 1;
 		}
-
+		System.out.println("finished");
 		if ( !exec.isTerminated() )
 		{
-			exec.shutdown();
-			exec.awaitTermination(5L, TimeUnit.SECONDS);
+			exec.shutdownNow();
+			// exec.awaitTermination(5L, TimeUnit.SECONDS);
 		}	
 	}
 }

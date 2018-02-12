@@ -182,7 +182,8 @@ public class Main {
 	// }
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-		
+			
+
 		Main Database = new Main();
 		ArrayList<Flight> flights_local = Main.getFlights();
 		ArrayList<Passenger> passengers_local = Main.getPassengers();
@@ -195,8 +196,11 @@ public class Main {
 		int counter = 0;
 
 		ExecutorService exec = Executors.newFixedThreadPool(3);
+		long start_time = System.currentTimeMillis();
+		long wait_time = 10000;
+		long end_time = start_time + wait_time;
 
-		while(true) {
+		while(System.currentTimeMillis() < end_time) {
 
 			int randomNum = getRand(1,5);
 			System.out.println("randomNum: "+randomNum);
@@ -219,16 +223,17 @@ public class Main {
 			exec.execute(transaction);
 
 
-			if(counter == 10) {
+			// if(counter == 10) {
 				System.out.println("Transaction: "+Transaction.trasnsaction_count);
-				break;
-			}
-			counter += 1;
+			// 	break;
+			// }
+			// counter += 1;
 		}
+		System.out.println("finished");
 		if ( !exec.isTerminated() )
 		{
-			exec.shutdown();
-			exec.awaitTermination(5L, TimeUnit.SECONDS);
+			exec.shutdownNow();
+			// exec.awaitTermination(1L, TimeUnit.SECONDS);
 		}	
 	}
 }
