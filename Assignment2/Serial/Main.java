@@ -194,7 +194,7 @@ public class Main {
 		while(System.currentTimeMillis() < end_time) {
 
 			int randomNum = getRand(1,5);
-			System.out.println("randomNum: "+randomNum);
+			// System.out.println("randomNum: "+randomNum);
 
 			int randomFlight = getRand(0, flights_local.size()-1);
 			Flight selectedFlight = flights_local.get(randomFlight);

@@ -53,7 +53,6 @@ class Transaction implements Runnable {
 	public void run(){
 		if (option == 1) {
 			Reserve(f1, passengerId);
-			
 		}
 		else if(option == 2) {
 			Cancel(f1, passengerId);
@@ -81,6 +80,8 @@ class Transaction implements Runnable {
 		finally {
 			counterLock.unlock();
 		}
+
+		// transaction_count += 1;
 		sleep();
 	}
 
@@ -92,14 +93,18 @@ class Transaction implements Runnable {
 		int j = passengerId;
 		try {
 			Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
-			Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
 			try{
 				if(flight.book(passengerId)) {
-					Main.passengers.get(passengerId).addBookedFlight(flight);
+					try {
+						Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+						Main.passengers.get(passengerId).addBookedFlight(flight);
+					}
+					finally {
+						Main.passengers_lock.get(j).unlock();
+					}
 				}
 			}
 			finally {
-				Main.passengers_lock.get(j).unlock();
 				Main.flights_lock.get(i).unlock();
 			}
 		} catch (InterruptedException e) {
@@ -115,15 +120,18 @@ class Transaction implements Runnable {
 		int j = passengerId;
 		try {
 			Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
-			Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
 			try {
 				if(flight.cancel(passengerId)) {
-					Main.passengers.get(passengerId).removeBookedFlight(flight);
+					try {
+						Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+						Main.passengers.get(passengerId).removeBookedFlight(flight);
+					}
+					finally {
+						Main.passengers_lock.get(j).unlock();
+					}
 				}
-				
 			}
 			finally {
-				Main.passengers_lock.get(j).unlock();
 				Main.flights_lock.get(i).unlock();
 			}
 		} catch (InterruptedException e) {
@@ -138,14 +146,11 @@ class Transaction implements Runnable {
 		int j = passengerId;
 		try {
 			Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
-			try {
-				Main.passengers.get(passengerId).getAllFlights();
-			}
-			finally {
-				Main.passengers_lock.get(j).unlock();
-			}
+			Main.passengers.get(passengerId).getAllFlights();
 		} catch (InterruptedException e) {
 
+		} finally {
+			Main.passengers_lock.get(j).unlock();
 		}
 	}
 
@@ -200,6 +205,8 @@ class Transaction implements Runnable {
 					if(f2.getPassengers().size() < f2.getSeats()) {
 						f1.cancel(passengerId);
 						f2.book(passengerId);
+						Main.passengers.get(passengerId).removeBookedFlight(f1);
+						Main.passengers.get(passengerId).addBookedFlight(f2);
 					}
 					else {
 						System.out.println("No more seats available.");
@@ -242,11 +249,10 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-		long start_time = System.currentTimeMillis();
 		Main Database = new Main();
 		ArrayList<Flight> flights_local =Main.getFlights();
 		ArrayList<Passenger> passengers_local = Main.getPassengers();
-
+		
 		for(int i=0; i<=10; i++) {
 			flights_local.add(new Flight(i,2));			
 			flights_lock.add(new ReentrantLock());
@@ -256,17 +262,18 @@ public class Main {
 			passengers_lock.add(new ReentrantLock());
 		}
 		int counter = 0;
-
+		
 		ExecutorService exec = Executors.newFixedThreadPool(3);
-
-		long wait_time = 10000;
+		
+		long start_time = System.currentTimeMillis();
+		long wait_time = 5000;
 		long end_time = start_time + wait_time;
 
 
 		while(System.currentTimeMillis() < end_time) {
 
 			int randomNum = getRand(1,5);
-			System.out.println("randomNum: "+randomNum);
+			// System.out.println("randomNum: "+randomNum);
 
 			int randomFlight = getRand(0, flights_local.size()-1);
 			Flight selectedFlight = flights_local.get(randomFlight);
