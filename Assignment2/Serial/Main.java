@@ -40,6 +40,15 @@ class Transaction implements Runnable {
 	{
 		this.passengerId = i;
 	}
+
+	private static void sleep() {
+		try {
+			Thread.sleep(50);
+		} 
+		catch (InterruptedException e) {
+		}
+	}
+
 	@Override
 	public void run() {
 		try {
@@ -67,6 +76,7 @@ class Transaction implements Runnable {
 			else {
 				System.out.println("Invalid Condition");
 			}
+			sleep();
 
 		}
 		catch (InterruptedException e) {

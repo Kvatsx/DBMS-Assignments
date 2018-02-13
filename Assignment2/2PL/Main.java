@@ -40,6 +40,15 @@ class Transaction implements Runnable {
 	{
 		this.passengerId = i;
 	}
+
+	private static void sleep() {
+		try {
+			Thread.sleep(50);
+		} 
+		catch (InterruptedException e) {
+		}
+	}
+
 	@Override
 	public void run(){
 		if (option == 1) {
@@ -73,6 +82,7 @@ class Transaction implements Runnable {
 		// finally {
 		// 	counterLock.unlock();
 		// }
+		sleep();
 	}
 
 	/**
