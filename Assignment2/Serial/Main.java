@@ -52,52 +52,54 @@ class Transaction implements Runnable {
 
 	@Override
 	public void run() {
-		while ( Main.lock.isLocked() )
-		{
+		do {
+			try {
+				if ( Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS) )
+				{
+					try {
+			            // System.out.println("DB Locked for Transaction: " + transaction_count);
+						// try {
+						// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
+							transaction_count++;
+						// } catch (InterruptedException e) {
 
-		}
-		Main.lock.lock();
-		try {
-			// Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-            // System.out.println("DB Locked for Transaction: " + transaction_count);
-			// try {
-			// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
-				transaction_count++;
-			// } catch (InterruptedException e) {
+						// } finally {
+						// 	counterLock.unlock();
+						// }
+						if(option == 1) {
+							Reserve(f1, passengerId);
+							
+						}
+						else if(option == 2) {
+							Cancel(f1, passengerId);
+							
+						}
+						else if(option == 3) {
+							My_Flights(passengerId);
+						}
+						else if(option == 4) {
+							Total_Reservations();
+						}
+						else if(option == 5) {
+							Transfer(f1, f2, passengerId);
+						}
+						else {
+							System.out.println("Invalid Condition");
+						}
+						sleep();
 
-			// } finally {
-			// 	counterLock.unlock();
-			// }
-			if(option == 1) {
-				Reserve(f1, passengerId);
-				
+					}
+					finally {
+						Main.lock.unlock();
+						break;
+						// System.out.println("Lock Released for Transaction: " + String.valueOf(transaction_count-1));
+					}
+				}
 			}
-			else if(option == 2) {
-				Cancel(f1, passengerId);
-				
-			}
-			else if(option == 3) {
-				My_Flights(passengerId);
-			}
-			else if(option == 4) {
-				Total_Reservations();
-			}
-			else if(option == 5) {
-				Transfer(f1, f2, passengerId);
-			}
-			else {
-				System.out.println("Invalid Condition");
-			}
-			sleep();
+			catch(InterruptedException e) {
 
-		}
-		// catch (InterruptedException e) {
-
-		// }
-		finally {
-			Main.lock.unlock();
-			// System.out.println("Lock Released for Transaction: " + String.valueOf(transaction_count-1));
-		}
+			}
+		} while ( true );
 	}
 
 	/**
