@@ -17,7 +17,6 @@ class Transaction implements Runnable {
 	private int passengerId;
 	private int option;
 	public static volatile int transaction_count = 0;
-	private ReentrantLock counterLock = new ReentrantLock();
 
 	public Transaction(){
 		this.option = -1;
@@ -70,16 +69,6 @@ class Transaction implements Runnable {
 		else {
 			System.out.println("Invalid Condition");
 		}
-		// try {
-		// 	counterLock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
-		// 	transaction_count++;
-		// }
-		// catch(InterruptedException e) {
-
-		// }
-		// finally {
-		// 	counterLock.unlock();
-		// }
 
 		transaction_count += 1;
 		sleep();
@@ -250,21 +239,17 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-		Main Database = new Main();
 		ArrayList<Flight> flights_local =Main.getFlights();
 		ArrayList<Passenger> passengers_local = Main.getPassengers();
 		
 		for(int i=0; i<=10; i++) {
-			flights_local.add(new Flight(i,2));			
+			flights_local.add(new Flight(i,getRand(1,10)));			
 			flights_lock.add(new ReentrantLock());
-		}
-		for(int i=0; i<=20; i++) {
 			passengers_local.add(new Passenger(i));
 			passengers_lock.add(new ReentrantLock());
 		}
-		int counter = 0;
 		
-		ExecutorService exec = Executors.newFixedThreadPool(20);
+		ExecutorService exec = Executors.newFixedThreadPool(10);
 		
 		long start_time = System.currentTimeMillis();
 		long wait_time = 5000;
@@ -297,6 +282,6 @@ public class Main {
 		if ( !exec.isTerminated() )
 		{
 			exec.shutdownNow();
-		}	
+		}
 	}
 }

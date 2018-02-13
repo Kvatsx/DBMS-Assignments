@@ -180,22 +180,17 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-			
-
-		Main Database = new Main();
 		ArrayList<Flight> flights_local = Main.getFlights();
 		ArrayList<Passenger> passengers_local = Main.getPassengers();
 
 		for(int i=0; i<=10; i++) {
-			flights_local.add(new Flight(i,2));
+			flights_local.add(new Flight(i,getRand(1,10)));
 			passengers_local.add(new Passenger(i));
-
 		}
-		int counter = 0;
 
-		ExecutorService exec = Executors.newFixedThreadPool(15);
+		ExecutorService exec = Executors.newFixedThreadPool(30);
 		long start_time = System.currentTimeMillis();
-		long wait_time = 10000;
+		long wait_time = 5000;
 		long end_time = start_time + wait_time;
 
 		while(System.currentTimeMillis() < end_time) {
