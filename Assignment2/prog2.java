@@ -41,7 +41,6 @@ class Transaction implements Runnable {
 	}
 	@Override
 	public void run() {
-
 		if(option == 1) {
 			Reserve(f1, passengerId);
 			
@@ -57,8 +56,8 @@ class Transaction implements Runnable {
 			Total_Reservations();
 		}
 		else if(option == 5) {
+				Transfer(f1, f2, passengerId);
 			
-			Transfer(f1, f2, passengerId);
 		}
 		else {
 			System.out.println("Invalid Condition");
@@ -72,16 +71,20 @@ class Transaction implements Runnable {
 	public void Reserve(Flight flight, int passengerId) {
 		int i = prog2.flights.indexOf(flight);
 		int j = passengerId;
-		prog2.flights_lock.get(i).lock();
-		prog2.passengers_lock.get(j).lock();
-		try{
-			if(flight.book(passengerId)) {
-				prog2.passengers.get(passengerId).addBookedFlight(flight);
+		try {
+			prog2.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+			prog2.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			try{
+				if(flight.book(passengerId)) {
+					prog2.passengers.get(passengerId).addBookedFlight(flight);
+				}
 			}
-		}
-		finally {
-			prog2.passengers_lock.get(j).unlock();
-			prog2.flights_lock.get(i).unlock();
+			finally {
+				prog2.passengers_lock.get(j).unlock();
+				prog2.flights_lock.get(i).unlock();
+			}
+		} catch (InterruptedException e) {
+
 		}
 	}
 
@@ -91,17 +94,21 @@ class Transaction implements Runnable {
 	public void Cancel(Flight flight, int passengerId) {
 		int i = prog2.flights.indexOf(flight);
 		int j = passengerId;
-		prog2.flights_lock.get(i).lock();
-		prog2.passengers_lock.get(j).lock();
 		try {
-			if(flight.cancel(passengerId)) {
-				prog2.passengers.get(passengerId).removeBookedFlight(flight);
+			prog2.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+			prog2.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			try {
+				if(flight.cancel(passengerId)) {
+					prog2.passengers.get(passengerId).removeBookedFlight(flight);
+				}
+				
 			}
-			
-		}
-		finally {
-			prog2.passengers_lock.get(j).unlock();
-			prog2.flights_lock.get(i).unlock();
+			finally {
+				prog2.passengers_lock.get(j).unlock();
+				prog2.flights_lock.get(i).unlock();
+			}
+		} catch (InterruptedException e) {
+
 		}
 	}
 
@@ -110,12 +117,16 @@ class Transaction implements Runnable {
 	 */
 	public void My_Flights(int passengerId) {
 		int j = passengerId;
-		prog2.passengers_lock.get(j).lock();
 		try {
-			prog2.passengers.get(passengerId).getAllFlights();
-		}
-		finally {
-			prog2.passengers_lock.get(j).unlock();
+			prog2.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			try {
+				prog2.passengers.get(passengerId).getAllFlights();
+			}
+			finally {
+				prog2.passengers_lock.get(j).unlock();
+			}
+		} catch (InterruptedException e) {
+
 		}
 	}
 
@@ -123,21 +134,24 @@ class Transaction implements Runnable {
 	 * Function to print the total number of reservations made in all the flights
 	 */
 	public void Total_Reservations() {
-
 		int totalReservations = 0;
-		for(Flight flight: Main.flights) {
-			int i = prog2.flights.indexOf(flight);
-			prog2.flights_lock.get(i).lock();
-			try {
-				if(flight.getNumReserved() > 0) {
-					totalReservations += flight.getNumReserved();
+		try {
+			for(Flight flight: Main.flights) {
+				int i = prog2.flights.indexOf(flight);
+				prog2.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+				try {
+					if(flight.getNumReserved() > 0) {
+						totalReservations += flight.getNumReserved();
+					}
+				}
+				finally {
+					prog2.flights_lock.get(i).unlock();
 				}
 			}
-			finally {
-				prog2.flights_lock.get(i).unlock();
-			}
+			System.out.println("Total Number of Reservations are: " + String.valueOf(totalReservations));
+		} catch (InterruptedException e) {
+
 		}
-		System.out.println("Total Number of Reservations are: " + String.valueOf(totalReservations));
 		
 	}
 
@@ -148,40 +162,52 @@ class Transaction implements Runnable {
 		int i = prog2.flights.indexOf(f1);
 		int k = prog2.flights.indexOf(f2);
 		int j = passengerId;
-		prog2.flights_lock.get(i).lock();
-		prog2.flights_lock.get(k).lock();
-		prog2.passengers_lock.get(j).lock();
 		try {
-			if(f1.getPassenger(passengerId) != null) {
-				if(f2.getPassengers().size() < f2.getSeats()) {
-					f1.cancel(passengerId);
-					f2.book(passengerId);
+			if(i < k) {
+				prog2.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+				prog2.flights_lock.get(k).tryLock(100L,TimeUnit.MILLISECONDS);
+			}
+			else if(k > i) {
+				prog2.flights_lock.get(k).tryLock(100L,TimeUnit.MILLISECONDS);
+				prog2.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+			}
+			else{
+				System.out.println("Passenger is already in this flight.");
+				return;
+			}
+			prog2.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			try {
+				if(f1.getPassenger(passengerId) != null) {
+					if(f2.getPassengers().size() < f2.getSeats()) {
+						f1.cancel(passengerId);
+						f2.book(passengerId);
+					}
+					else {
+						System.out.println("No more seats available.");
+					}
 				}
 				else {
-					System.out.println("No more seats available");
+					System.out.println("Passenger hasn't booked this flight");
 				}
 			}
-			else {
-				System.out.println("Passenger hasn't booked this flight");
+			finally {
+				prog2.flights_lock.get(i).unlock();
+				prog2.flights_lock.get(k).unlock();
+				prog2.passengers_lock.get(j).unlock();
 			}
-		}
-		finally {
-			prog2.flights_lock.get(i).unlock();
-			prog2.flights_lock.get(k).unlock();
-			prog2.passengers_lock.get(j).unlock();
+		} catch (InterruptedException e) {
+
 		}
 	}
 }
 
-public class prog2 {
+public class Main2 {
 
 	public static ArrayList<Flight> flights = new ArrayList<>();
 	public static ArrayList<Passenger> passengers = new ArrayList<>();
 	public static ReentrantLock lock = new ReentrantLock();
 	public static ArrayList<ReentrantLock> flights_lock = new ArrayList<ReentrantLock>();
 	public static ArrayList<ReentrantLock> passengers_lock = new ArrayList<ReentrantLock>();
-	// private ArrayList<Flight> flights = new ArrayList<>();
-	// private ArrayList<Passenger> passengers = new ArrayList<>();
 
 	private static int getRand(int min, int max) {
 		Random r = new Random();
@@ -196,29 +222,6 @@ public class prog2 {
 		return passengers;
 	}
 
-	// public static void serialize(Main main) throws IOException {
-	// 	ObjectOutputStream out = null;
-	// 	try {
-	// 		out = new ObjectOutputStream(new FileOutputStream("Program_1_data.txt"));
-	// 		out.writeObject(main);
-	// 	}
-	// 	finally {
-	// 		out.close();
-	// 	}
-	// }
-
-	// public static Main deserialize() throws IOException, ClassNotFoundException {
-	// 	ObjectInputStream in = null;
-	// 	try {
-	// 		in = new ObjectInputStream(new FileInputStream("Program_1_data.txt"));
-	// 		Main a = (Main) in.readObject();
-	// 		return a;
-	// 	}
-	// 	finally {
-	// 		in.close();
-	// 	}
-	// }
-
 	public static void main(String[] args) throws IOException,  InterruptedException {
 		long start_time = System.currentTimeMillis();
 		prog2 Database = new prog2();
@@ -226,9 +229,11 @@ public class prog2 {
 		ArrayList<Passenger> passengers_local = prog2.getPassengers();
 
 		for(int i=0; i<=10; i++) {
-			flights_local.add(new Flight(i,2));
-			passengers_local.add(new Passenger(i));
+			flights_local.add(new Flight(i,2));			
 			flights_lock.add(new ReentrantLock());
+		}
+		for(int i=0; i<=20; i++) {
+			passengers_local.add(new Passenger(i));
 			passengers_lock.add(new ReentrantLock());
 		}
 		int counter = 0;
@@ -260,19 +265,11 @@ public class prog2 {
 			transaction.putPassengerId(selectedPassenger.getId());
 
 			exec.execute(transaction);
-
-
-			// if(counter == 10) {
-				System.out.println("Transaction: "+Transaction.transaction_count);
-			// 	break;
-			// }
-			// counter += 1;
 		}
-		System.out.println("finished");
+		// System.out.println("finished");
 		if ( !exec.isTerminated() )
 		{
 			exec.shutdownNow();
-			// exec.awaitTermination(5L, TimeUnit.SECONDS);
 		}	
 	}
 }

@@ -1,5 +1,11 @@
-all: Main.class Flight.class Transaction.class Passenger.class
+one: Main.class Flight.class Transaction.class Passenger.class
 	java Main
+
+two: Main2.class Flight.class Transaction.class Passenger.class
+	java Main2
+
+Main2.class: Main2.java
+	javac Main2.java
 
 Main.class: Main.java
 	javac Main.java
@@ -15,3 +21,4 @@ clean:
 	rm Passenger.class
 	rm Main.class
 	rm Transaction.class
+	rm Main2.class

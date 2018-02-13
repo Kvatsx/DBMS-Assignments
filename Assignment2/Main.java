@@ -17,7 +17,7 @@ class Transaction implements Runnable {
 
 	private Flight f1, f2;
 	private int passengerId;
-	public static int trasnsaction_count = 0;
+	public static int transaction_count = 0;
 	private int option;
 
 	public Transaction(){
@@ -44,11 +44,10 @@ class Transaction implements Runnable {
 	@Override
 	public void run() {
 
-		Main.lock.lock();
 		try {
-			
-			trasnsaction_count++;
-            System.out.println("Lock Hold Count - "+ Main.lock.getHoldCount());
+			Main.lock.tryLock(100L, TimeUnit.MILLISECONDS);
+            System.out.println("DB Locked for Transaction: " + transaction_count);
+			transaction_count++;
 
 			if(option == 1) {
 				Reserve(f1, passengerId);
@@ -73,9 +72,12 @@ class Transaction implements Runnable {
 			}
 
 		}
+		catch (InterruptedException e) {
+
+		}
 		finally {
 			Main.lock.unlock();
-			System.out.println("option - " + this.option + " releasing inner lock");
+			System.out.println("Lock Released for Transaction: " + String.valueOf(transaction_count-1));
 		}
 	}
 
@@ -142,8 +144,6 @@ public class Main {
 	public static ArrayList<Flight> flights = new ArrayList<>();
 	public static ArrayList<Passenger> passengers = new ArrayList<>();
 	public static ReentrantLock lock = new ReentrantLock();
-	// private ArrayList<Flight> flights = new ArrayList<>();
-	// private ArrayList<Passenger> passengers = new ArrayList<>();
 
 	private static int getRand(int min, int max) {
 		Random r = new Random();
@@ -157,29 +157,6 @@ public class Main {
 	public static ArrayList<Passenger> getPassengers() {
 		return passengers;
 	}
-
-	// public static void serialize(Main main) throws IOException {
-	// 	ObjectOutputStream out = null;
-	// 	try {
-	// 		out = new ObjectOutputStream(new FileOutputStream("Program_1_data.txt"));
-	// 		out.writeObject(main);
-	// 	}
-	// 	finally {
-	// 		out.close();
-	// 	}
-	// }
-
-	// public static Main deserialize() throws IOException, ClassNotFoundException {
-	// 	ObjectInputStream in = null;
-	// 	try {
-	// 		in = new ObjectInputStream(new FileInputStream("Program_1_data.txt"));
-	// 		Main a = (Main) in.readObject();
-	// 		return a;
-	// 	}
-	// 	finally {
-	// 		in.close();
-	// 	}
-	// }
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
 			
@@ -195,7 +172,7 @@ public class Main {
 		}
 		int counter = 0;
 
-		ExecutorService exec = Executors.newFixedThreadPool(3);
+		ExecutorService exec = Executors.newFixedThreadPool(1);
 		long start_time = System.currentTimeMillis();
 		long wait_time = 10000;
 		long end_time = start_time + wait_time;
@@ -221,19 +198,11 @@ public class Main {
 			transaction.putPassengerId(selectedPassenger.getId());
 
 			exec.execute(transaction);
-
-
-			// if(counter == 10) {
-				System.out.println("Transaction: "+Transaction.trasnsaction_count);
-			// 	break;
-			// }
-			// counter += 1;
 		}
 		System.out.println("finished");
 		if ( !exec.isTerminated() )
 		{
 			exec.shutdownNow();
-			// exec.awaitTermination(1L, TimeUnit.SECONDS);
 		}	
 	}
 }
