@@ -53,16 +53,16 @@ class Transaction implements Runnable {
 	@Override
 	public void run() {
 		try {
-			Main.lock.tryLock(100L, TimeUnit.MILLISECONDS);
+			Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
             // System.out.println("DB Locked for Transaction: " + transaction_count);
-			try {
-				counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
+			// try {
+			// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
 				transaction_count++;
-			} catch (InterruptedException e) {
+			// } catch (InterruptedException e) {
 
-			} finally {
-				counterLock.unlock();
-			}
+			// } finally {
+			// 	counterLock.unlock();
+			// }
 			if(option == 1) {
 				Reserve(f1, passengerId);
 				
