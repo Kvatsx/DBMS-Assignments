@@ -16,8 +16,8 @@ class Transaction implements Runnable {
 	private Flight f1, f2;
 	private int passengerId;
 	private int option;
-	public static volatile int transaction_count = 0;
-	// private ReentrantLock counterLock = new ReentrantLock();
+	public static int transaction_count = 0;
+	private ReentrantLock counterLock = new ReentrantLock();
 
 	public Transaction(){
 		this.option = -1;
@@ -43,7 +43,7 @@ class Transaction implements Runnable {
 
 	private static void sleep() {
 		try {
-			Thread.sleep(50);
+			Thread.sleep(5);
 		} 
 		catch (InterruptedException e) {
 		}
@@ -66,22 +66,21 @@ class Transaction implements Runnable {
 			Total_Reservations();
 		}
 		else if(option == 5) {
-				Transfer(f1, f2, passengerId);
-			
+			Transfer(f1, f2, passengerId);
 		}
 		else {
 			System.out.println("Invalid Condition");
 		}
-		// try {
-		// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
+		try {
+			counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
 			transaction_count++;
-		// }
-		// catch(InterruptedException e) {
+		}
+		catch(InterruptedException e) {
 
-		// }
-		// finally {
-		// 	counterLock.unlock();
-		// }
+		}
+		finally {
+			counterLock.unlock();
+		}
 		sleep();
 	}
 

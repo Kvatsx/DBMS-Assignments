@@ -19,6 +19,7 @@ class Transaction implements Runnable {
 	private int passengerId;
 	public static volatile int transaction_count = 0;
 	private int option;
+	private ReentrantLock counterLock = new ReentrantLock();	
 
 	public Transaction(){
 		this.option = -1;
@@ -43,7 +44,7 @@ class Transaction implements Runnable {
 
 	private static void sleep() {
 		try {
-			Thread.sleep(50);
+			Thread.sleep(5);
 		} 
 		catch (InterruptedException e) {
 		}
@@ -54,8 +55,14 @@ class Transaction implements Runnable {
 		try {
 			Main.lock.tryLock(100L, TimeUnit.MILLISECONDS);
             // System.out.println("DB Locked for Transaction: " + transaction_count);
-			transaction_count++;
+			try {
+				counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
+				transaction_count++;
+			} catch (InterruptedException e) {
 
+			} finally {
+				counterLock.unlock();
+			}
 			if(option == 1) {
 				Reserve(f1, passengerId);
 				
