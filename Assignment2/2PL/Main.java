@@ -71,7 +71,7 @@ class Transaction implements Runnable {
 			System.out.println("Invalid Condition");
 		}
 		// try {
-		// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
+		// 	counterLock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
 		// 	transaction_count++;
 		// }
 		// catch(InterruptedException e) {
@@ -92,11 +92,11 @@ class Transaction implements Runnable {
 		int i = Main.flights.indexOf(flight);
 		int j = passengerId;
 		try {
-			Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+			Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			try{
 				if(flight.book(passengerId)) {
 					try {
-						Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+						Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 						Main.passengers.get(passengerId).addBookedFlight(flight);
 					}
 					finally {
@@ -119,11 +119,11 @@ class Transaction implements Runnable {
 		int i = Main.flights.indexOf(flight);
 		int j = passengerId;
 		try {
-			Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+			Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			try {
 				if(flight.cancel(passengerId)) {
 					try {
-						Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+						Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 						Main.passengers.get(passengerId).removeBookedFlight(flight);
 					}
 					finally {
@@ -145,7 +145,7 @@ class Transaction implements Runnable {
 	public void My_Flights(int passengerId) {
 		int j = passengerId;
 		try {
-			Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			Main.passengers.get(passengerId).getAllFlights();
 		} catch (InterruptedException e) {
 
@@ -162,7 +162,7 @@ class Transaction implements Runnable {
 		try {
 			for(Flight flight: Main.flights) {
 				int i = Main.flights.indexOf(flight);
-				Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 				try {
 					if(flight.getNumReserved() > 0) {
 						totalReservations += flight.getNumReserved();
@@ -188,18 +188,18 @@ class Transaction implements Runnable {
 		int j = passengerId;
 		try {
 			if(i < k) {
-				Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
-				Main.flights_lock.get(k).tryLock(100L,TimeUnit.MILLISECONDS);
+				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
+				Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			}
 			else if(k > i) {
-				Main.flights_lock.get(k).tryLock(100L,TimeUnit.MILLISECONDS);
-				Main.flights_lock.get(i).tryLock(100L,TimeUnit.MILLISECONDS);
+				Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
+				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			}
 			else{
 				System.out.println("Passenger is already in this flight.");
 				return;
 			}
-			Main.passengers_lock.get(j).tryLock(100L,TimeUnit.MILLISECONDS);
+			Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
 			try {
 				if(f1.getPassenger(passengerId) != null) {
 					if(f2.getPassengers().size() < f2.getSeats()) {

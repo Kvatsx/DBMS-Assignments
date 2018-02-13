@@ -52,8 +52,13 @@ class Transaction implements Runnable {
 
 	@Override
 	public void run() {
+		while ( Main.lock.isLocked() )
+		{
+
+		}
+		Main.lock.lock();
 		try {
-			Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
+			// Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS);
             // System.out.println("DB Locked for Transaction: " + transaction_count);
 			// try {
 			// 	counterLock.tryLock(100L, TimeUnit.MILLISECONDS);
@@ -86,9 +91,9 @@ class Transaction implements Runnable {
 			sleep();
 
 		}
-		catch (InterruptedException e) {
+		// catch (InterruptedException e) {
 
-		}
+		// }
 		finally {
 			Main.lock.unlock();
 			// System.out.println("Lock Released for Transaction: " + String.valueOf(transaction_count-1));
@@ -157,7 +162,7 @@ public class Main {
 
 	public static ArrayList<Flight> flights = new ArrayList<>();
 	public static ArrayList<Passenger> passengers = new ArrayList<>();
-	public static ReentrantLock lock = new ReentrantLock();
+	public static volatile ReentrantLock lock = new ReentrantLock();
 
 	private static int getRand(int min, int max) {
 		Random r = new Random();
@@ -186,7 +191,7 @@ public class Main {
 		}
 		int counter = 0;
 
-		ExecutorService exec = Executors.newFixedThreadPool(1);
+		ExecutorService exec = Executors.newFixedThreadPool(15);
 		long start_time = System.currentTimeMillis();
 		long wait_time = 10000;
 		long end_time = start_time + wait_time;
