@@ -21,6 +21,5 @@ def main():
     plt.ylabel('Transaction Count')
     plt.xlabel('Thread Count')
     plt.show()
-
 if __name__ == '__main__':
     main()
