@@ -54,7 +54,7 @@ class Transaction implements Runnable {
 	public void run() {
 		do {
 			try {
-				if ( Main.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS) )
+				if ( program1_2016123_2016048.lock.tryLock(Long.MAX_VALUE, TimeUnit.MILLISECONDS) )
 				{
 					try {
 			            // System.out.println("DB Locked for Transaction: " + transaction_count);
@@ -90,7 +90,7 @@ class Transaction implements Runnable {
 
 					}
 					finally {
-						Main.lock.unlock();
+						program1_2016123_2016048.lock.unlock();
 						break;
 						// System.out.println("Lock Released for Transaction: " + String.valueOf(transaction_count-1));
 					}
@@ -107,7 +107,7 @@ class Transaction implements Runnable {
 	 */
 	public void Reserve(Flight flight, int passengerId) {
 		if(flight.book(passengerId)) {
-			Main.passengers.get(passengerId).addBookedFlight(flight);
+			program1_2016123_2016048.passengers.get(passengerId).addBookedFlight(flight);
 		}
 	}
 
@@ -116,7 +116,7 @@ class Transaction implements Runnable {
 	 */
 	public void Cancel(Flight flight, int passengerId) {
 		if(flight.cancel(passengerId)) {
-			Main.passengers.get(passengerId).removeBookedFlight(flight);
+			program1_2016123_2016048.passengers.get(passengerId).removeBookedFlight(flight);
 		}
 	}
 
@@ -124,7 +124,7 @@ class Transaction implements Runnable {
 	 * Function to print the flights of a particular passenger
 	 */
 	public void My_Flights(int passengerId) {
-		Main.passengers.get(passengerId).getAllFlights();
+		program1_2016123_2016048.passengers.get(passengerId).getAllFlights();
 	}
 
 	/**
@@ -132,7 +132,7 @@ class Transaction implements Runnable {
 	 */
 	public void Total_Reservations() {
 		int totalReservations = 0;
-		for(Flight flight: Main.flights) {
+		for(Flight flight: program1_2016123_2016048.flights) {
 			if(flight.getNumReserved() > 0) {
 				totalReservations += flight.getNumReserved();
 			}
@@ -160,7 +160,7 @@ class Transaction implements Runnable {
 	}
 }
 
-public class Main {
+public class program1_2016123_2016048 {
 
 	public static ArrayList<Flight> flights = new ArrayList<>();
 	public static ArrayList<Passenger> passengers = new ArrayList<>();
@@ -180,8 +180,8 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws IOException,  InterruptedException {
-		ArrayList<Flight> flights_local = Main.getFlights();
-		ArrayList<Passenger> passengers_local = Main.getPassengers();
+		ArrayList<Flight> flights_local = program1_2016123_2016048.getFlights();
+		ArrayList<Passenger> passengers_local = program1_2016123_2016048.getPassengers();
 
 		for(int i=0; i<=10; i++) {
 			flights_local.add(new Flight(i,getRand(1,10)));
