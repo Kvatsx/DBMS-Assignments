@@ -188,7 +188,7 @@ public class Main {
 			passengers_local.add(new Passenger(i));
 		}
 
-		ExecutorService exec = Executors.newFixedThreadPool(30);
+		ExecutorService exec = Executors.newFixedThreadPool(50);
 		long start_time = System.currentTimeMillis();
 		long wait_time = 5000;
 		long end_time = start_time + wait_time;

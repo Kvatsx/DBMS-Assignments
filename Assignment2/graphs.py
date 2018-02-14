@@ -5,8 +5,8 @@ def main():
     # Time: 5 Seconds
     all_thread_pool_vals = [10, 20, 30, 40, 50]
 
-    serial_values = [581, 545, 513, 520, 597]
-    twopl_values = [4877, 8248, 10781, 13000, 15000]
+    serial_values = [804, 829, 789, 795, 813]
+    twopl_values = [7043, 13027, 18978, 24539, 28842]
 
     plt.plot(all_thread_pool_vals, serial_values)
     plt.ylim(ymin=0, ymax=2*np.mean(np.array(serial_values)))

@@ -80,23 +80,33 @@ class Transaction implements Runnable {
 	public void Reserve(Flight flight, int passengerId) {
 		int i = Main.flights.indexOf(flight);
 		int j = passengerId;
-		try {
-			Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			try{
-				if(flight.book(passengerId)) {
-					try {
-						Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-						Main.passengers.get(passengerId).addBookedFlight(flight);
+		try{
+			if ( Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) ){
+				try {
+					if(flight.book(passengerId)) {
+						try {
+							if ( Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+							{
+								try {
+									Main.passengers.get(passengerId).addBookedFlight(flight);
+								}
+								finally {
+									Main.passengers_lock.get(j).unlock();
+								}
+							}
+						}
+						catch (InterruptedException e) {
+
+						}
 					}
-					finally {
-						Main.passengers_lock.get(j).unlock();
-					}
+				} 
+				finally {
+					Main.flights_lock.get(i).unlock();
 				}
 			}
-			finally {
-				Main.flights_lock.get(i).unlock();
-			}
-		} catch (InterruptedException e) {
+		}
+		catch(InterruptedException e)
+		{
 
 		}
 	}
@@ -108,22 +118,30 @@ class Transaction implements Runnable {
 		int i = Main.flights.indexOf(flight);
 		int j = passengerId;
 		try {
-			Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			try {
-				if(flight.cancel(passengerId)) {
-					try {
-						Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-						Main.passengers.get(passengerId).removeBookedFlight(flight);
-					}
-					finally {
-						Main.passengers_lock.get(j).unlock();
+			if ( Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS)) {
+				try {
+					if(flight.cancel(passengerId)) {
+						if ( Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+						{
+							try {
+								Main.passengers.get(passengerId).removeBookedFlight(flight);
+							}
+							finally {
+								Main.passengers_lock.get(j).unlock();
+							}
+						}
 					}
 				}
+				catch ( InterruptedException e )
+				{
+
+				}
+				finally {
+					Main.flights_lock.get(i).unlock();
+				}
 			}
-			finally {
-				Main.flights_lock.get(i).unlock();
-			}
-		} catch (InterruptedException e) {
+		} 
+		catch (InterruptedException e) {
 
 		}
 	}
@@ -134,13 +152,19 @@ class Transaction implements Runnable {
 	public void My_Flights(int passengerId) {
 		int j = passengerId;
 		try {
-			Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			Main.passengers.get(passengerId).getAllFlights();
-		} catch (InterruptedException e) {
+			if ( Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+			{
+				try {
+					Main.passengers.get(passengerId).getAllFlights();
+				}
+				finally {
+					Main.passengers_lock.get(j).unlock();
+				}
+			}
+		} 
+		catch (InterruptedException e) {
 
-		} finally {
-			Main.passengers_lock.get(j).unlock();
-		}
+		} 
 	}
 
 	/**
@@ -151,14 +175,16 @@ class Transaction implements Runnable {
 		try {
 			for(Flight flight: Main.flights) {
 				int i = Main.flights.indexOf(flight);
-				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-				try {
-					if(flight.getNumReserved() > 0) {
-						totalReservations += flight.getNumReserved();
+				if (Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS))
+				{
+					try {
+						if(flight.getNumReserved() > 0) {
+							totalReservations += flight.getNumReserved();
+						}
 					}
-				}
-				finally {
-					Main.flights_lock.get(i).unlock();
+					finally {
+						Main.flights_lock.get(i).unlock();
+					}
 				}
 			}
 			System.out.println("Total Number of Reservations are: " + String.valueOf(totalReservations));
@@ -175,44 +201,108 @@ class Transaction implements Runnable {
 		int i = Main.flights.indexOf(f1);
 		int k = Main.flights.indexOf(f2);
 		int j = passengerId;
-		try {
-			if(i < k) {
-				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-				Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			}
-			else if(k > i) {
-				Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-				Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			}
-			else{
-				System.out.println("Passenger is already in this flight.");
-				return;
-			}
-			Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS);
-			try {
-				if(f1.getPassenger(passengerId) != null) {
-					if(f2.getPassengers().size() < f2.getSeats()) {
-						f1.cancel(passengerId);
-						f2.book(passengerId);
-						Main.passengers.get(passengerId).removeBookedFlight(f1);
-						Main.passengers.get(passengerId).addBookedFlight(f2);
-					}
-					else {
-						System.out.println("No more seats available.");
-					}
-				}
-				else {
-					System.out.println("Passenger hasn't booked this flight");
-				}
-			}
-			finally {
-				Main.flights_lock.get(i).unlock();
-				Main.flights_lock.get(k).unlock();
-				Main.passengers_lock.get(j).unlock();
-			}
-		} 
-		catch (InterruptedException e) {
 
+		if(i < k) {
+			try{
+			    if ( Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+			    {
+			        try{
+			            if ( Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+					    {
+					        try{
+					            if ( Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+							    {
+							        try{
+							            if(f1.getPassenger(passengerId) != null) {
+											if(f2.getPassengers().size() < f2.getSeats()) {
+												f1.cancel(passengerId);
+												f2.book(passengerId);
+												Main.passengers.get(passengerId).removeBookedFlight(f1);
+												Main.passengers.get(passengerId).addBookedFlight(f2);
+											}
+											else {
+												System.out.println("No more seats available.");
+											}
+										}
+										else {
+											System.out.println("Passenger hasn't booked this flight");
+										}
+							        }
+							        finally {
+							            Main.passengers_lock.get(j).unlock();
+							        }
+							    }
+					        }
+					        catch ( InterruptedException e ) {
+
+					        }
+					        finally {
+					            Main.flights_lock.get(k).unlock();
+					        }
+					    }
+			        }
+			        catch (InterruptedException e) {
+			        }
+			        finally {
+			            Main.flights_lock.get(i).unlock();
+			        }
+			    }
+			}
+			catch (InterruptedException e) {
+			}
+		}
+		else if(k > i) {
+						try{
+			    if ( Main.flights_lock.get(k).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+			    {
+			        try{
+			            if ( Main.flights_lock.get(i).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+					    {
+					        try{
+					            if ( Main.passengers_lock.get(j).tryLock(Long.MAX_VALUE,TimeUnit.MILLISECONDS) )
+							    {
+							        try{
+							            if(f1.getPassenger(passengerId) != null) {
+											if(f2.getPassengers().size() < f2.getSeats()) {
+												f1.cancel(passengerId);
+												f2.book(passengerId);
+												Main.passengers.get(passengerId).removeBookedFlight(f1);
+												Main.passengers.get(passengerId).addBookedFlight(f2);
+											}
+											else {
+												System.out.println("No more seats available.");
+											}
+										}
+										else {
+											System.out.println("Passenger hasn't booked this flight");
+										}
+							        }
+							        finally {
+							            Main.passengers_lock.get(j).unlock();
+							        }
+							    }
+					        }
+					        catch ( InterruptedException e ) {
+
+					        }
+					        finally {
+					            Main.flights_lock.get(i).unlock();
+					        }
+					    }
+			        }
+			        catch (InterruptedException e) {
+			        }
+			        finally {
+			            Main.flights_lock.get(k).unlock();
+			        }
+			    }
+			}
+			catch (InterruptedException e) {
+			}
+		}
+		else{
+			System.out.println("Passenger is already in this flight.");
+			return;
 		}
 	}
 }
@@ -249,7 +339,7 @@ public class Main {
 			passengers_lock.add(new ReentrantLock());
 		}
 		
-		ExecutorService exec = Executors.newFixedThreadPool(10);
+		ExecutorService exec = Executors.newFixedThreadPool(50);
 		
 		long start_time = System.currentTimeMillis();
 		long wait_time = 5000;
