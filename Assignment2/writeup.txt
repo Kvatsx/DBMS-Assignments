@@ -1,0 +1,10 @@
+We were asked to implement a concurrency control algorithm for an airline database.
+
+For Serial scheduling:-
+We have created a thread pool where all the thread will be added in the queue. Multiple thread will run in parallel. But for serial scheduling we locked whole database, so only one transaction can run at a time while others will be waiting for each the release of lock over the database. We observed that for multiple size of thread pool, number of transactions that are completed are nearly same, Transaction count is not affected by thread pool size.
+
+For 2PL scheduling:-
+We created lock for each item. for eg locks for all flight in the array, locks for each passenger etc. We are adding all transaction in the thread pool and they will run in parallel. Each transaction will obtain lock on the data items that query is working. We observed that there were many transaction objects that were completed in specific time.
+
+How we compared difference between serial and 2pl.?
+We created transactions for fixed time with fixed thread pool size. We observed that transaction count was very high as compared to the transaction count in serial scheduling. We observed transaction count for both sceduling by changing the thread pool size and plot graph showing that change.
