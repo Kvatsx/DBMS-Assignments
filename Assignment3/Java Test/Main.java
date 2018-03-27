@@ -2,13 +2,14 @@ import java.util.*;
 import java.io.*;
 
 class BPTree {
-    int data;
+    int[] data;
     BPTree[] children;
     int leafNode;
     int size;
 
     public BPTree() {
         this.children = new BPTree[6];
+        this.data = new int[5];
         for(int child = 0; child < children.length; child ++) {
             children[child] = new BPTree();
         }
@@ -23,9 +24,33 @@ public class Main {
     public static BufferedReader input = new BufferedReader(new InputStreamReader(System.in));
     public static BPTree root = new BPTree();
 
-    public static void split(BPTree root, int position) {
-        return;
+    public static void traverse(BPTree root) {
+        for (int i = 0; i < root.size; i++)
+        {
+            if (root.leafNode == 0)
+            {
+                traverse(root.children[i]);
+            }
+            System.out.println(root.data[i]);
+        } 
+        if (root.leaf == false)
+        {
+            traverse(root.children[i]);
+        }
+        System.out.println();
     }
+
+    public static void split(BPTree root, int position) {
+        int mid;
+        if (position == -1) {
+            mid = root.data[2];
+            root.data[2] = 0;
+            root.size = root.size - 1;
+            
+
+        }
+        return;
+    } 
 
     public static void insert(int item) {
         BPTree tempRoot = root;
