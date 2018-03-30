@@ -1,5 +1,5 @@
-all: Node.class InternalNode.class LeafNode.class BPlusTree.class Data.class Test.class
-	java Test
+all: Node.class InternalNode.class LeafNode.class BPTree.class Data.class
+	java BPTree
 Node.class: Node.java
 	javac Node.java
 
@@ -9,18 +9,15 @@ InternalNode.class: InternalNode.java
 LeafNode.class: LeafNode.java
 	javac LeafNode.java
 
-BPlusTree: BPlusTree.java
-	javac BPlusTree.java
+BPlusTree: BPTree.java
+	javac BPTree.java
 
 Data.class: Data.java
 	javac Data.java
-
-Test.class: Test.java
-	javac Test.java
 
 clean:
 	rm Node.class
 	rm InternalNode.class
 	rm LeafNode.class
-	rm BPlusTree.class
-	rm Test.class
+	rm BPTree.class
+	rm Data.class
