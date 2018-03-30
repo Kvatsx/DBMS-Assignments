@@ -68,6 +68,7 @@ public class LeafNode extends Node {
         else
         {
             keys.add(key);
+            Collections.sort(keys);
             Values.add(value);
         }
         if ( BPlusTree.Root.isOverflow() )
@@ -91,6 +92,7 @@ public class LeafNode extends Node {
     public void Merge(Node sibling)
     {
         LeafNode lnode = (LeafNode) sibling;
+        System.out.println(sibling);
         keys.addAll(lnode.keys);
         Values.addAll(lnode.Values);
         next = lnode.next;

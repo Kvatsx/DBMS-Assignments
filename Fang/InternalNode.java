@@ -17,7 +17,6 @@ public class InternalNode extends Node {
     @Override
     public int getValue(int key)
     {
-        // System.out.println("All Childrens\n"+children);
         return getChild(key).getValue(key);
     }
     @Override
@@ -63,6 +62,8 @@ public class InternalNode extends Node {
             {
                 right_child = child_node;
             }
+            System.out.println("Right: " + right_child);
+            System.out.println("Left: " + left_child);
             left_child.Merge(right_child);
             DeleteChild(right_child.getFirst_Leaf_Key());
             if ( left_child.isOverflow() )
@@ -120,30 +121,33 @@ public class InternalNode extends Node {
 
     public Node getChild(int key)
     {
-        int index = Collections.binarySearch(keys, key);
-        int in = index >= 0 ? index+1: -index-1;
-        // int index = -1;
-        // for ( int i=0; i<keys.size(); i++ )
-        // {
-        //     if ( keys.get(i) == key )
-        //     {
-        //         index = i;
-        //         break;
-        //     }
-        // }
-        // if ( index >= 0 )
-        // {
-        //     index += 1;
-        // }
-        // else
-        // {
-        //     index = index*(-1) - 1;
-        // }
-        // System.out.println("index: " + index);
-        // System.out.println(children.get(index));
-        // return children.get(index);
-        // System.out.println("in: "+in);
-        return children.get(in);
+        int index = -1;
+        boolean foundKey = false;
+        int lastKeyValue = -1;
+        for ( int i=0; i<keys.size(); i++ )
+        {
+            if ( keys.get(i) == key )
+            {
+                index = i;
+                foundKey = true;
+                break;
+            }
+            lastKeyValue = keys.get(i);
+        }
+        if(!foundKey) {
+            if(lastKeyValue < key) {
+                index = -1*(keys.size()+1);
+            }
+        }
+        if ( index >= 0 )
+        {
+            index += 1;
+        }
+        else
+        {
+            index = index*(-1) - 1;
+        }
+        return children.get(index);
     }
 
     public void DeleteChild(int key)
@@ -157,6 +161,9 @@ public class InternalNode extends Node {
                 break;
             }
         }
+
+        System.out.println("Delete Index: " + index);
+        System.out.println("Key To Find: " + key);
         if ( index >= 0 )
         {
             keys.remove(index);
@@ -193,53 +200,71 @@ public class InternalNode extends Node {
     public Node getChild_Left_sibling(int key)
     {
         int index = -1;
+        boolean foundKey = false;
+        int lastKeyValue = -1;
         for ( int i=0; i<keys.size(); i++ )
         {
             if ( keys.get(i) == key )
             {
                 index = i;
+                foundKey = true;
                 break;
             }
+            lastKeyValue = keys.get(i);
         }
-        int ij;
+        if(!foundKey) {
+            if(lastKeyValue < key) {
+                index = -1*(keys.size()+1);
+            }
+        }
         if ( index >= 0 )
         {
-            ij = index +1;
+            index += 1;
         }
         else
         {
-            ij = index*(-1) - 1;
+            index = index*(-1) - 1;
         }
-        if ( ij > 0 )
-        {
-            return children.get(ij - 1);
+
+        System.out.println("Child Index Left: " + index);
+
+        if(index > 0) {
+            System.out.println("Children LEFT: " + children.get(index - 1));
+            return children.get(index - 1);
         }
         return null;
     }
 
     public Node getChild_Right_sibling(int key)
     {
+        
         int index = -1;
-        for (int i = 0; i < keys.size(); i++) 
-        {
-            if (keys.get(i) == key) 
-            {
+        boolean foundKey = false;
+        int lastKeyValue = -1;
+        for (int i = 0; i < keys.size(); i++) {
+            if (keys.get(i) == key) {
                 index = i;
+                foundKey = true;
                 break;
             }
+            lastKeyValue = keys.get(i);
         }
-        int ij;
-        if (index >= 0) 
-        {
-            ij = index + 1;
-        } 
-        else 
-        {
-            ij = index * (-1) - 1;
+        if (!foundKey) {
+            if (lastKeyValue < key) {
+                index = -1 * (keys.size() + 1);
+            }
         }
-        if ( ij < KeySize() )
-        {
-            return children.get(ij + 1);
+        if (index >= 0) {
+            index += 1;
+        } else {
+            index = index * (-1) - 1;
+        }
+
+        System.out.println("Child Index Right: " + index);        
+
+        if (index > 0) {
+            System.out.println("Children RIGHT: " + children.get(index + 1));            
+            return children.get(index + 1);
         }
         return null;
     }
