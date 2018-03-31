@@ -11,7 +11,15 @@ public class LeafNode extends Node {
 
     @Override
     public int getValue(int key) {
-        int index = Collections.binarySearch(keys, key);
+        int index = -1;
+
+        for(int i=0; i<keys.size(); i++) {
+            if (keys.get(i) == key) {
+                index = i;
+                break;
+            }
+        }
+        
         int itemToReturn = -1;
         if(index >= 0) {
             itemToReturn = values.get(index);
@@ -21,7 +29,15 @@ public class LeafNode extends Node {
 
     @Override
     public void deleteValue(int key) {
-        int index = Collections.binarySearch(keys, key);
+        int index = -1;
+
+        for(int i=0; i<keys.size(); i++) {
+            if (keys.get(i) == key) {
+                index = i;
+                break;
+            }
+        }
+
         if (index >= 0) {
             keys.remove(index);
             values.remove(index);
@@ -43,12 +59,12 @@ public class LeafNode extends Node {
             values.add(foundIndex, value);
         }
         if (BPTree.Root.isOverflow()) {
-            Node sibling = split();
-            InternalNode newRoot = new InternalNode();
-            newRoot.keys.add(sibling.getFirstLeafKey());
-            newRoot.children.add(this);
-            newRoot.children.add(sibling);
-            BPTree.Root = newRoot;
+            Node nearByNode = split();
+            InternalNode subRoot = new InternalNode();
+            subRoot.keys.add(nearByNode.getFirstLeafKey());
+            subRoot.children.add(this);
+            subRoot.children.add(nearByNode);
+            BPTree.Root = subRoot;
         }
     }
 
@@ -96,25 +112,11 @@ public class LeafNode extends Node {
                 // int cmp2 = compare(node.keys.get(i), key2);
                 if (compare(node.keys.get(i), key1) >= 0 && compare(node.keys.get(i), key2) <= 0) {
                     result.add(node.values.get(i));
-                } else if (compare(node.keys.get(i), key2) >= 0 || compare(node.keys.get(i), key2) > 0) {
+                } 
+                else if (compare(node.keys.get(i), key2) >= 0 || compare(node.keys.get(i), key2) > 0) {
                     return result;
                 }
             }
-            // Iterator<Integer> selectedKeys = node.keys.iterator();
-            // Iterator<Integer> selectedValues = node.values.iterator();
-            // while (selectedKeys.hasNext()) {
-            // 	int key = selectedKeys.next();
-            //     int value = selectedValues.next();
-            //     int cmp1 = compare(key, key1);
-            //     // int cmp1 = key.compareTo(key1);
-            //     int cmp2 = compare(key, key2);
-            //     // int cmp2 = key.compareTo(key2);
-            //     if (cmp1 >= 0 && cmp2 <= 0) {
-            //         result.add(value);
-            //     }
-            // 	else if (cmp2 >= 0 || cmp2 > 0)
-            // 		return result;
-            // }
             node = node.next;
         }
         return result;
@@ -130,9 +132,7 @@ public class LeafNode extends Node {
         LeafNode nearByNode = new LeafNode();
         nearByNode.keys.addAll(keys.subList((size() + 1) / 2, size()));
         nearByNode.values.addAll(values.subList((size() + 1) / 2, size()));
-
         clearKeys((size() + 1) / 2, size());
-    
         nearByNode.next = next;
         next = nearByNode;
         return nearByNode;
