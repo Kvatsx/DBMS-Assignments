@@ -14,25 +14,37 @@ public class InternalNode extends Node {
     }
 
     @Override
+    public LeafNode getFirstLeafNode() {
+        return children.get(0).getFirstLeafNode();
+    }
+
+    @Override
     public void deleteValue(int key) {
         Node child = getChild(key);
         // System.out.println("Child.keys: "+ child.keys);
         child.deleteValue(key);
         if (child.isUnderflow()) {
-            Node childLeftSibling = getChildLeftSibling(key);
-            Node childRightSibling = getChildRightSibling(key);
-            Node left = childLeftSibling != null ? childLeftSibling : child;
-            Node right = childLeftSibling != null ? child : childRightSibling;
-            // System.out.print("Left: " + left+" || ");
-            // System.out.println("Right: " + right);
-            left.merge(right);
-            deleteChild(right.getFirstLeafKey());
-            if (left.isOverflow()) {
-                Node sibling = left.split();
+            Node l;
+            Node r;
+
+            if(getChildLeftSibling(key) == null) {
+                l = child;
+                r = getChildRightSibling(key);
+            }
+            else {
+                l = getChildLeftSibling(key);
+                r = child;
+            }
+            // System.out.print("Left: " + l+" || ");
+            // System.out.println("Right: " + r);
+            l.merge(r);
+            deleteChild(r.getFirstLeafKey());
+            if (l.isOverflow()) {
+                Node sibling = l.split();
                 insertChild(sibling.getFirstLeafKey(), sibling);
             }
-            if (BPTree.Root.keyNumber() == 0)
-                BPTree.Root = left;
+            if (BPTree.Root.size() == 0)
+                BPTree.Root = l;
         }
     }
 
@@ -57,13 +69,7 @@ public class InternalNode extends Node {
     @Override
     public int getFirstLeafKey() {
         return children.get(0).getFirstLeafKey();
-    }
-
-    @Override
-    public LeafNode getFirstLeafNode() {
-        return children.get(0).getFirstLeafNode();
-    }    
-    
+    }  
 
     @Override
 	public TreeSet<Integer> getRange(int key1, int key2) {
@@ -83,21 +89,20 @@ public class InternalNode extends Node {
 
     @Override
     public Node split() {
-        int from = keyNumber() / 2 + 1, to = keyNumber();
-        InternalNode sibling = new InternalNode();
-        sibling.keys.addAll(keys.subList(from, to));
-        sibling.children.addAll(children.subList(from, to + 1));
+        InternalNode temp = new InternalNode();
+        temp.keys.addAll(keys.subList(size() / 2 + 1, size()));
+        temp.children.addAll(children.subList(size() / 2 + 1, size() + 1));
 
-        keys.subList(from - 1, to).clear();
-        children.subList(from, to + 1).clear();
+        keys.subList(size() / 2 + 1 - 1, size()).clear();
+        children.subList(size() / 2 + 1, size() + 1).clear();
 
-        return sibling;
+        return temp;
     }
 
     @Override
     public boolean isOverflow() {
         return children.size() > BPTree.Order;
-          }
+    }
 
     @Override
     public boolean isUnderflow() {
@@ -105,19 +110,26 @@ public class InternalNode extends Node {
     }
 
     public Node getChild(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
-        // System.out.println("Child index: "+ childIndex);
-        return children.get(childIndex);
+        int foundIndex = Collections.binarySearch(keys, key);
+        if(foundIndex >= 0) {
+            foundIndex += 1;
+        }
+        else {
+            foundIndex *= -1;
+            foundIndex -= 1;
+        }
+        // int childIndex = foundIndex >= 0 ? foundIndex + 1 : -foundIndex - 1;
+        // System.out.println("foundIndex index: "+ foundIndex);
+        return children.get(foundIndex);
     }
 
     public void deleteChild(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        // System.out.println("Delete Index: " + loc);
+        int foundIndex = Collections.binarySearch(keys, key);
+        // System.out.println("Delete Index: " + foundIndex);
         // System.out.println("Key To Find: " + key);
-        if (loc >= 0) {
-            keys.remove(loc);
-            children.remove(loc + 1);
+        if (foundIndex >= 0) {
+            keys.remove(foundIndex);
+            children.remove(foundIndex + 1);
         }
     }
 
@@ -149,7 +161,7 @@ public class InternalNode extends Node {
         int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
         // System.out.println("Child Index Right: " + childIndex);
 
-        if (childIndex < keyNumber()) {
+        if (childIndex < size()) {
             // System.out.println("Children RIGHT: " + children.get(childIndex + 1));
             return children.get(childIndex + 1);
         }

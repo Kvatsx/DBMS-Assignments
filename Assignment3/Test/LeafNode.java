@@ -107,7 +107,7 @@ public class LeafNode extends Node {
     @Override
     public Node split() {
         LeafNode sibling = new LeafNode();
-        int from = (keyNumber() + 1) / 2, to = keyNumber();
+        int from = (size() + 1) / 2, to = size();
         sibling.keys.addAll(keys.subList(from, to));
         sibling.values.addAll(values.subList(from, to));
 

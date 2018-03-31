@@ -9,7 +9,7 @@ InternalNode.class: InternalNode.java
 LeafNode.class: LeafNode.java
 	javac LeafNode.java
 
-BPlusTree: BPTree.java
+BPlusTree.class: BPTree.java
 	javac BPTree.java
 
 Data.class: Data.java
@@ -23,3 +23,4 @@ clean:
 	rm Data.class
 	rm Reader.class
 	rm local_record.csv
+	rm indexfile

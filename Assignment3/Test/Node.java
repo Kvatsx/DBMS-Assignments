@@ -1,9 +1,10 @@
+import java.io.Serializable;
 import java.util.*;
 
-public abstract class Node {
+public abstract class Node implements Serializable{
     public List<Integer> keys;
 
-    public int keyNumber() {
+    public int size() {
         return keys.size();
     }
 

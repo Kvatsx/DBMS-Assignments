@@ -1,14 +1,13 @@
 import java.util.*;
 import java.io.*;
 
-public class BPTree {
+public class BPTree implements Serializable{
 
-    public static int Order;
+    public static int Order = 10;
     public static Node Root;
     public static ArrayList<Data> data;
 
-    public BPTree(int Order) {
-        this.Order = Order;
+    public BPTree() {
         this.Root = new LeafNode();
     }
 
@@ -150,12 +149,39 @@ public class BPTree {
     //     return a.compareTo(b);
     // }
 
-    public static void main(String[] args) throws IOException {
+    public static void serialize(BPTree obj) throws IOException {
+        ObjectOutputStream out = null;
+        try {
+            out = new ObjectOutputStream(new FileOutputStream("indexfile"));
+            out.writeObject(obj);
+        } finally {
+            out.close();
+        }
+    }
+
+    public static BPTree deserialize() throws IOException, ClassNotFoundException {
+        ObjectInputStream in = null;
+        try {
+            in = new ObjectInputStream(new FileInputStream("indexfile"));
+            BPTree obj = (BPTree) in.readObject();
+            return obj;
+        } finally {
+            in.close();
+        }
+    }
+    
+    public static void init() throws IOException{
+        BPTree bt = new BPTree();
+        serialize(bt);
+    }
+
+    public static void main(String[] args) throws IOException, ClassNotFoundException {
         Reader.init(System.in);
         // System.out.print("Please Enter Order for B+Tree: ");
         // int order = Reader.nextInt();
+        init();
         System.out.println("Order of the Tree is 10");
-        BPTree bt = new BPTree(10);
+        BPTree bt = deserialize();
         CSVReader();
         bt.bulkInsert();
         // BPTree bpt = new BPTree(Order);
@@ -212,7 +238,10 @@ public class BPTree {
                 data.add(obj);
                 bt.insert(Integer.valueOf(id), data.size()-1);
                 createCSV(data, "local_record.csv");
+                File file = new File("indexfile");
 
+                file.delete();
+                serialize(bt);
             }
             else if ( input == 5 )
             {
@@ -229,6 +258,7 @@ public class BPTree {
                     }
                 }
                 createCSV(data, "local_record.csv");
+                serialize(bt);
             }
             else
             {
