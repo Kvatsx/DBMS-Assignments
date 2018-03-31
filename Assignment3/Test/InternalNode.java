@@ -134,9 +134,9 @@ public class InternalNode extends Node {
     }
 
     public void insertChild(int key, Node child) {
-        int loc = Collections.binarySearch(keys, key);
-        int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
-        if (loc >= 0) {
+        int lc = Collections.binarySearch(keys, key);
+        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
+        if (lc >= 0) {
             children.set(childIndex, child);
         } else {
             keys.add(childIndex, key);
@@ -145,8 +145,8 @@ public class InternalNode extends Node {
     }
 
     public Node getChildLeftSibling(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
+        int lc = Collections.binarySearch(keys, key);
+        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
         // System.out.println("Child Index Left: " + childIndex);
         if (childIndex > 0) {
             // System.out.println("Children LEFT: " + children.get(childIndex - 1));
@@ -157,8 +157,8 @@ public class InternalNode extends Node {
     }
 
     public Node getChildRightSibling(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
+        int lc = Collections.binarySearch(keys, key);
+        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
         // System.out.println("Child Index Right: " + childIndex);
 
         if (childIndex < size()) {

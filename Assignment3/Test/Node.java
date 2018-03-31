@@ -1,7 +1,6 @@
-import java.io.Serializable;
 import java.util.*;
 
-public abstract class Node implements Serializable{
+public abstract class Node {
     public List<Integer> keys;
 
     public int size() {

@@ -1,7 +1,9 @@
+import java.io.Serializable;
+
 // Kaustav Vats (2016048)
 // Yashit Maheshwari (2016123)
 
-public class Data{
+public class Data implements Serializable {
     private String ValidTag = "1111";
     private String InstructorID;
     private String Name;

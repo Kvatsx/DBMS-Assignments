@@ -11,24 +11,24 @@ public class LeafNode extends Node {
 
     @Override
     public int getValue(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        return loc >= 0 ? values.get(loc) : -1;
+        int lc = Collections.binarySearch(keys, key);
+        return lc >= 0 ? values.get(lc) : -1;
     }
 
     @Override
     public void deleteValue(int key) {
-        int loc = Collections.binarySearch(keys, key);
-        if (loc >= 0) {
-            keys.remove(loc);
-            values.remove(loc);
+        int lc = Collections.binarySearch(keys, key);
+        if (lc >= 0) {
+            keys.remove(lc);
+            values.remove(lc);
         }
     }
 
     @Override
     public void insertValue(int key, int value) {
-        int loc = Collections.binarySearch(keys, key);
-        int valueIndex = loc >= 0 ? loc : -loc - 1;
-        if (loc >= 0) {
+        int lc = Collections.binarySearch(keys, key);
+        int valueIndex = lc >= 0 ? lc : -lc - 1;
+        if (lc >= 0) {
             values.set(valueIndex, value);
         } else {
             keys.add(valueIndex, key);

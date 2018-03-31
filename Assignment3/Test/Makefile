@@ -23,4 +23,3 @@ clean:
 	rm Data.class
 	rm Reader.class
 	rm local_record.csv
-	rm indexfile

@@ -5,7 +5,7 @@ public class BPTree implements Serializable{
 
     public static int Order = 10;
     public static Node Root;
-    public static ArrayList<Data> data;
+    public ArrayList<Data> data;
 
     public BPTree() {
         this.Root = new LeafNode();
@@ -96,9 +96,9 @@ public class BPTree implements Serializable{
 
     }
 
-    public static void CSVReader()
+    public void CSVReader()
     {
-        String csvFile = "record.csv";
+        String csv = "record.csv";
         BufferedReader br = null;
         String line = "";
         String del = ",";
@@ -106,14 +106,15 @@ public class BPTree implements Serializable{
         try {
             data = new ArrayList<Data>();
 
-            br = new BufferedReader(new FileReader(csvFile));
+            br = new BufferedReader(new FileReader(csv));
             br.readLine();
             while ((line = br.readLine()) != null) {
 
                 String[] rec = line.split(del);
-                System.out.println(rec.length);
+                // System.out.println(rec.length);
 
-                String out = rec[0] + " " + rec[1] + " " + rec[2] + " " + rec[3] + " " + rec[4] + "\n";
+                String out = rec[0] + " " + rec[1] + " " + rec[2] + " " + rec[3] + " " + rec[4];
+                // System.out.println(out);
                 Data d = new Data(rec[1], rec[2], rec[3], Long.parseLong(rec[4]));
                 data.add(d);
             }
@@ -143,27 +144,21 @@ public class BPTree implements Serializable{
         createCSV(data, "local_record.csv");
     }
 
-    // @Override
-    // public int compare(String a, String b)
-    // {
-    //     return a.compareTo(b);
-    // }
-
-    public static void serialize(BPTree obj) throws IOException {
+    public static void serialize(ArrayList<Data> obj) throws IOException {
         ObjectOutputStream out = null;
         try {
-            out = new ObjectOutputStream(new FileOutputStream("indexfile"));
+            out = new ObjectOutputStream(new FileOutputStream("indexfile.txt"));
             out.writeObject(obj);
         } finally {
             out.close();
         }
     }
 
-    public static BPTree deserialize() throws IOException, ClassNotFoundException {
+    public static ArrayList<Data> deserialize() throws IOException, ClassNotFoundException {
         ObjectInputStream in = null;
         try {
-            in = new ObjectInputStream(new FileInputStream("indexfile"));
-            BPTree obj = (BPTree) in.readObject();
+            in = new ObjectInputStream(new FileInputStream("indexfile.txt"));
+            ArrayList<Data> obj = (ArrayList<Data>) in.readObject();
             return obj;
         } finally {
             in.close();
@@ -172,19 +167,21 @@ public class BPTree implements Serializable{
     
     public static void init() throws IOException{
         BPTree bt = new BPTree();
-        serialize(bt);
+        bt.CSVReader();
+        bt.bulkInsert();
+        // System.out.println(bt);
+        serialize(bt.data);
     }
 
     public static void main(String[] args) throws IOException, ClassNotFoundException {
         Reader.init(System.in);
         // System.out.print("Please Enter Order for B+Tree: ");
         // int order = Reader.nextInt();
-        init();
+        // init();
+        BPTree bt = new BPTree();
         System.out.println("Order of the Tree is 10");
-        BPTree bt = deserialize();
-        CSVReader();
+        bt.data = deserialize();
         bt.bulkInsert();
-        // BPTree bpt = new BPTree(Order);
         while (true) {
             System.out.println("\nMenu");
             System.out.println("1) Find");
@@ -199,7 +196,7 @@ public class BPTree implements Serializable{
                 System.out.print("Enter the key: ");
                 int key = Reader.nextInt();
                 int out = bt.search(key);
-                System.out.println(data.get(out));
+                System.out.println(bt.data.get(out));
             }
             else if ( input == 2 )
             {
@@ -219,7 +216,7 @@ public class BPTree implements Serializable{
                 TreeSet<Integer> al = bt.searchRange(k1, k2);
                 Iterator<Integer> itr = al.iterator();
                 while (itr.hasNext()) {
-                    System.out.println(data.get(itr.next()));
+                    System.out.println(bt.data.get(itr.next()));
                 }
             }
             else if ( input == 4 )
@@ -235,126 +232,36 @@ public class BPTree implements Serializable{
                 int salary = Reader.nextInt();
                 // Write to the file and insert in Tree
                 Data obj = new Data(id, name, department, salary);
-                data.add(obj);
-                bt.insert(Integer.valueOf(id), data.size()-1);
-                createCSV(data, "local_record.csv");
+                bt.data.add(obj);
+                bt.insert(Integer.valueOf(id), bt.data.size()-1);
+                createCSV(bt.data, "local_record.csv");
                 File file = new File("indexfile");
 
                 file.delete();
-                serialize(bt);
+                serialize(bt.data);
             }
             else if ( input == 5 )
             {
                 System.out.print("Enter the key: ");
                 int key = Reader.nextInt();
                 bt.delete(key);
-                for ( int i=0; i<data.size(); i++ )
+                for ( int i=0; i<bt.data.size(); i++ )
                 {
-                    Data e = data.get(i);
+                    Data e = bt.data.get(i);
                     if ( Integer.valueOf(e.getInstructorId()) == key )
                     {
                         e.Delete();
                         break;
                     }
                 }
-                createCSV(data, "local_record.csv");
-                serialize(bt);
+                createCSV(bt.data, "local_record.csv");
+                serialize(bt.data);
             }
             else
             {
                 break;
             }
         }
-// To test for String keys ***********************************
-        // BPTree bt = new BPTree(order);
-        // System.out.println("Started.......");
-        // bt.insert("0", 100);
-        // System.out.println("First Test Done");
-        // // System.out.println(bt);
-        // bt.insert("1", 101);
-        // bt.insert("2", 102);
-        // System.out.println(bt);
-        // bt.insert("3", 103);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("4", 104);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("5", 105);
-        // // System.out.println(BPTree.Root.keys);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("6", 106);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("7", 107);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("50", 150);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("30", 130);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("20", 120);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("11", 111);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("8", 108);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert("9", 109);
-        // System.out.println("BPTree CURRENT\n" + bt);
-        // bt.delete("1");
-        // System.out.println("BPTree\n" + bt);
-        // bt.delete("4");
-        // System.out.println("BPTree\n" + bt);
-        // bt.delete("3");
-        // System.out.println("BPTree\n" + bt);
-        // System.out.println(bt.search("0"));
-        // System.out.println(bt.search("6"));
-        // System.out.println(bt.search("9"));
-        // System.out.println("Search Range ");
-        // System.out.println(bt.searchRange("3", "8"));
-
-// Test for Integer keys working fine except delete***********************************
-// To test for Integer Need to change key data type to Integer in all files :(
-        // BPTree bt = new BPTree(order);
-        // System.out.println("Started.......");
-        // bt.insert(0, 100);
-        // System.out.println("First Test Done");
-        // // System.out.println(bt);
-        // bt.insert(1, 101);
-        // bt.insert(2, 102);
-        // System.out.println(bt);
-        // bt.insert(3, 103);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(4, 104);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(5, 105);
-        // // System.out.println(BPTree.Root.keys);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(6, 106);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(7, 107);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(50, 150);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(30, 130);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(20, 120);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(11, 111);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(8, 108);
-        // System.out.println("BPTree\n" + bt);
-        // bt.insert(9, 109);
-        // System.out.println("BPTree DELETION\n" + bt);
-        // bt.delete(1);
-        // System.out.println("BPTree\n" + bt);
-        // bt.delete(4);
-        // System.out.println("BPTree\n" + bt);
-        // bt.delete(3);
-        // System.out.println("BPTree\n" + bt);
-        // System.out.println(bt.search(0));
-        // System.out.println(bt.search(3));
-        // System.out.println(bt.search(11));
-        // System.out.println("Search Range ");
-        // System.out.println(bt.searchRange(3, 8));
-        // System.out.println("Print All\n");
-        // bt.printAll();
     }
 }
 
