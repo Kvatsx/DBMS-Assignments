@@ -35,8 +35,6 @@ public class InternalNode extends Node {
                 l = getLeft(key);
                 r = child;
             }
-            // System.out.print("Left: " + l+" || ");
-            // System.out.println("Right: " + r);
             l.Merge(r);
             deleteChild(r.getFKey());
             if (l.checkValidity() == 1) {
@@ -53,7 +51,7 @@ public class InternalNode extends Node {
         Node foundChild = getChild(key);
         foundChild.Insert(key, value);
         if (foundChild.checkValidity() == 1) {
-            Node nearByNode = child.Split();
+            Node nearByNode = foundChild.Split();
             insertChild(nearByNode.getFKey(), nearByNode);
         }
         if (BPTree.Root.checkValidity() == 1) {
