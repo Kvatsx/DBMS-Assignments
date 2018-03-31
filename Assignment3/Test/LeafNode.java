@@ -74,7 +74,6 @@ public class LeafNode extends Node {
         return keys.get(0);
     }
 
-    
     @Override
     public void Merge(Node paramNode) {
         LeafNode selectedNode = (LeafNode) paramNode;
@@ -105,29 +104,12 @@ public class LeafNode extends Node {
         LeafNode node = this;
         while (node != null) {
             for(int i=0; i<node.keys.size(); i++) {
-                // int cmp1 = compare(node.keys.get(i), key1);
-                // int cmp2 = compare(node.keys.get(i), key2);
                 if (compare(node.keys.get(i), key1) >= 0 && compare(node.keys.get(i), key2) <= 0) {
                     result.add(node.values.get(i));
                 } else if (compare(node.keys.get(i), key2) >= 0 || compare(node.keys.get(i), key2) > 0) {
                     return result;
                 }
             }
-            // Iterator<Integer> selectedKeys = node.keys.iterator();
-            // Iterator<Integer> selectedValues = node.values.iterator();
-            // while (selectedKeys.hasNext()) {
-            // 	int key = selectedKeys.next();
-            //     int value = selectedValues.next();
-            //     int cmp1 = compare(key, key1);
-            //     // int cmp1 = key.compareTo(key1);
-            //     int cmp2 = compare(key, key2);
-            //     // int cmp2 = key.compareTo(key2);
-            //     if (cmp1 >= 0 && cmp2 <= 0) {
-            //         result.add(value);
-            //     }
-            // 	else if (cmp2 >= 0 || cmp2 > 0)
-            // 		return result;
-            // }
             node = node.next;
         }
         return result;

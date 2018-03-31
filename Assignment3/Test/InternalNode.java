@@ -27,12 +27,12 @@ public class InternalNode extends Node {
             Node l;
             Node r;
 
-            if(getChildLeftSibling(key) == null) {
+            if(getLeft(key) == null) {
                 l = child;
-                r = getChildRightSibling(key);
+                r = getRight(key);
             }
             else {
-                l = getChildLeftSibling(key);
+                l = getLeft(key);
                 r = child;
             }
             // System.out.print("Left: " + l+" || ");
@@ -50,19 +50,19 @@ public class InternalNode extends Node {
 
     @Override
     public void Insert(int key, int value) {
-        Node child = getChild(key);
-        child.Insert(key, value);
-        if (child.checkValidity() == 1) {
-            Node sibling = child.Split();
-            insertChild(sibling.getFKey(), sibling);
+        Node foundChild = getChild(key);
+        foundChild.Insert(key, value);
+        if (foundChild.checkValidity() == 1) {
+            Node nearByNode = child.Split();
+            insertChild(nearByNode.getFKey(), nearByNode);
         }
         if (BPTree.Root.checkValidity() == 1) {
-            Node sibling = Split();
-            InternalNode newRoot = new InternalNode();
-            newRoot.keys.add(sibling.getFKey());
-            newRoot.children.add(this);
-            newRoot.children.add(sibling);
-            BPTree.Root = newRoot;
+            Node nearByNode = Split();
+            InternalNode temp = new InternalNode();
+            temp.keys.add(nearByNode.getFKey());
+            temp.children.add(this);
+            temp.children.add(nearByNode);
+            BPTree.Root = temp;
         }
     }
 
@@ -87,16 +87,22 @@ public class InternalNode extends Node {
 
     }
 
+    public void clearKeys(int x, int y) {
+        keys.subList(x, y).clear();
+    }
+
+    public void clearValues(int x, int y) {
+        keys.subList(x, y).clear();
+    }
+
     @Override
     public Node Split() {
-        InternalNode temp = new InternalNode();
-        temp.keys.addAll(keys.subList(size() / 2 + 1, size()));
-        temp.children.addAll(children.subList(size() / 2 + 1, size() + 1));
-
-        keys.subList(size() / 2 + 1 - 1, size()).clear();
-        children.subList(size() / 2 + 1, size() + 1).clear();
-
-        return temp;
+        InternalNode internalNode = new InternalNode();
+        internalNode.keys.addAll(keys.subList(size() / 2 + 1, size()));
+        internalNode.children.addAll(children.subList(size() / 2 + 1, size() + 1));
+        clearKeys((size() / 2 + 1) - 1, size());
+        clearValues(size() / 2 + 1, size() + 1);
+        return internalNode;
     }
 
     /**
@@ -126,8 +132,6 @@ public class InternalNode extends Node {
             foundIndex *= -1;
             foundIndex -= 1;
         }
-        // int childIndex = foundIndex >= 0 ? foundIndex + 1 : -foundIndex - 1;
-        // System.out.println("foundIndex index: "+ foundIndex);
         return children.get(foundIndex);
     }
 
@@ -142,36 +146,52 @@ public class InternalNode extends Node {
     }
 
     public void insertChild(int key, Node child) {
-        int lc = Collections.binarySearch(keys, key);
-        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
-        if (lc >= 0) {
-            children.set(childIndex, child);
+        int foundIndex = Collections.binarySearch(keys, key);
+        int foundInnerIndex = -1;
+        if(foundIndex >= 0) {
+            foundInnerIndex = foundIndex + 1;
+        }
+        else {
+            foundInnerIndex = (-1)*foundIndex - 1;
+        }
+
+        if (foundIndex >= 0) {
+            children.set(foundInnerIndex, child);
         } else {
-            keys.add(childIndex, key);
-            children.add(childIndex + 1, child);
+            keys.add(foundInnerIndex, key);
+            children.add(foundInnerIndex + 1, child);
         }
     }
 
-    public Node getChildLeftSibling(int key) {
-        int lc = Collections.binarySearch(keys, key);
-        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
-        // System.out.println("Child Index Left: " + childIndex);
-        if (childIndex > 0) {
-            // System.out.println("Children LEFT: " + children.get(childIndex - 1));
-            return children.get(childIndex - 1);
+    public Node getLeft(int key) {
+        int foundIndex = Collections.binarySearch(keys, key);
+        int foundInnerIndex = -1;
+        if(foundIndex >= 0) {
+            foundInnerIndex = foundIndex + 1;
+        }
+        else {
+            foundInnerIndex = (-1)*foundIndex - 1;
+        }
+
+        // System.out.println("Child Index Left: " + foundInnerIndex);
+        if (foundInnerIndex > 0) {
+            // System.out.println("Children LEFT: " + children.get(foundInnerIndex - 1));
+            return children.get(foundInnerIndex - 1);
         }
 
         return null;
     }
 
-    public Node getChildRightSibling(int key) {
-        int lc = Collections.binarySearch(keys, key);
-        int childIndex = lc >= 0 ? lc + 1 : -lc - 1;
-        // System.out.println("Child Index Right: " + childIndex);
-
-        if (childIndex < size()) {
-            // System.out.println("Children RIGHT: " + children.get(childIndex + 1));
-            return children.get(childIndex + 1);
+    public Node getRight(int key) {
+        int foundIndex = Collections.binarySearch(keys, key);
+        int foundInnerIndex = -1;
+        if (foundIndex >= 0) {
+            foundInnerIndex = foundIndex + 1;
+        } else {
+            foundInnerIndex = (-1) * foundIndex - 1;
+        }
+        if (foundInnerIndex < size()) {
+            return children.get(foundInnerIndex + 1);
         }
 
         return null;
