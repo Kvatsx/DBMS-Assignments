@@ -200,28 +200,8 @@ public class BPTree implements Serializable{
             {
                 System.out.print("Enter the key: ");
                 int key = Reader.nextInt();
-                boolean flag = false;
-                for ( int i=0; i<bt.data.size(); i++ )
-                {
-                    if ( bt.data.get(i).getValidityTag().compareTo("0000") != 0 )
-                    {
-                        int k = Integer.valueOf(bt.data.get(i).getInstructorId());
-                        if ( k == key )
-                        {
-                            flag = true;
-                            break;
-                        }
-                    } 
-                }
-                if ( flag )
-                {
-                    int out = bt.search(key);
-                    System.out.println(bt.data.get(out));
-                }
-                else
-                {
-                    System.out.println("Wrong key number!\nTry Again");
-                }
+                int out = bt.search(key);
+                System.out.println(bt.data.get(out));
             }
             else if ( input == 2 )
             {
@@ -249,22 +229,8 @@ public class BPTree implements Serializable{
                 // Since Keys are unique there will be only one data.
                 System.out.print("Enter the key for which you want to print all data: ");
                 int key = Reader.nextInt();
-                boolean flag = false;
-                for (int i = 0; i < bt.data.size(); i++) {
-                    if (bt.data.get(i).getValidityTag().compareTo("0000") != 0) {
-                        int k = Integer.valueOf(bt.data.get(i).getInstructorId());
-                        if (k == key) {
-                            flag = true;
-                            break;
-                        }
-                    }
-                }
-                if (flag) {
-                    int out = bt.search(key);
-                    System.out.println(bt.data.get(out));
-                } else {
-                    System.out.println("Wrong key number!\nTry Again");
-                }
+                int out = bt.search(key);
+                System.out.println(bt.data.get(out));
             }
             else if ( input == 5 )
             {
@@ -277,63 +243,33 @@ public class BPTree implements Serializable{
                 String department = Reader.next();
                 System.out.print("Enter Salary: ");
                 int salary = Reader.nextInt();
-                boolean Flag = true;
-                for ( int i=0; i<bt.data.size(); i++ )
-                {
-                    int inID = Integer.valueOf(bt.data.get(i).getInstructorId());
-                    if ( inID == Integer.valueOf(id) && bt.data.get(i).getValidityTag().compareTo("0000") != 0 )
-                    {
-                        Flag = false;
-                        break;
-                    }
-                }
-                if ( Flag )
-                {
-                    // Write to the file and insert in Tree
-                    Data obj = new Data(id, name, department, salary);
-                    bt.data.add(obj);
-                    bt.insert(Integer.valueOf(id), bt.data.size() - 1);
-                    createCSV(bt.data, "local_record.csv");
-                    File file = new File("indexfile");
+                // Write to the file and insert in Tree
+                Data obj = new Data(id, name, department, salary);
+                bt.data.add(obj);
+                bt.insert(Integer.valueOf(id), bt.data.size()-1);
+                createCSV(bt.data, "local_record.csv");
+                File file = new File("indexfile");
 
-                    file.delete();
-                    serialize(bt.data);
-                    createCSV(bt.data, "local_record.csv");
-                }
-                else
-                {
-                    System.out.println("Record already exist with same InstructorID.");
-                }
+                file.delete();
+                serialize(bt.data);
+                createCSV(bt.data, "local_record.csv");
             }
             else if ( input == 6 )
             {
                 System.out.print("Enter the key: ");
                 int key = Reader.nextInt();
-                boolean Flag = false;
-                for (int i = 0; i < bt.data.size(); i++) {
-                    int inID = Integer.valueOf(bt.data.get(i).getInstructorId());
-                    if (inID == key && bt.data.get(i).getValidityTag().compareTo("0000") != 0) {
-                        Flag = true;
+                bt.delete(key);
+                for ( int i=0; i<bt.data.size(); i++ )
+                {
+                    Data e = bt.data.get(i);
+                    if ( Integer.valueOf(e.getInstructorId()) == key )
+                    {
+                        e.Delete();
                         break;
                     }
                 }
-                if ( Flag )
-                {
-                    bt.delete(key);
-                    for (int i = 0; i < bt.data.size(); i++) {
-                        Data e = bt.data.get(i);
-                        if (Integer.valueOf(e.getInstructorId()) == key) {
-                            e.Delete();
-                            break;
-                        }
-                    }
-                    serialize(bt.data);
-                    createCSV(bt.data, "local_record.csv");
-                }
-                else
-                {
-                    System.out.println("Wrong key Entered.");
-                }
+                serialize(bt.data);
+                createCSV(bt.data, "local_record.csv");
             }
             else
             {
