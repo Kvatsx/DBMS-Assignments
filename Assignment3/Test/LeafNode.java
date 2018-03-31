@@ -11,28 +11,36 @@ public class LeafNode extends Node {
 
     @Override
     public int getValue(int key) {
-        int lc = Collections.binarySearch(keys, key);
-        return lc >= 0 ? values.get(lc) : -1;
+        int index = Collections.binarySearch(keys, key);
+        int itemToReturn = -1;
+        if(index >= 0) {
+            itemToReturn = values.get(index);
+        }
+        return itemToReturn;
     }
 
     @Override
     public void deleteValue(int key) {
-        int lc = Collections.binarySearch(keys, key);
-        if (lc >= 0) {
-            keys.remove(lc);
-            values.remove(lc);
+        int index = Collections.binarySearch(keys, key);
+        if (index >= 0) {
+            keys.remove(index);
+            values.remove(index);
         }
     }
 
     @Override
     public void insertValue(int key, int value) {
-        int lc = Collections.binarySearch(keys, key);
-        int valueIndex = lc >= 0 ? lc : -lc - 1;
-        if (lc >= 0) {
-            values.set(valueIndex, value);
+        int index = Collections.binarySearch(keys, key);
+        int foundIndex = index;
+        
+        if(index < 0) {
+            foundIndex = (-1)*index - 1;
+        }
+        if (index >= 0) {
+            values.set(foundIndex, value);
         } else {
-            keys.add(valueIndex, key);
-            values.add(valueIndex, value);
+            keys.add(foundIndex, key);
+            values.add(foundIndex, value);
         }
         if (BPTree.Root.isOverflow()) {
             Node sibling = split();
@@ -55,11 +63,11 @@ public class LeafNode extends Node {
     } 
 
     @Override
-    public void merge(Node sibling) {
-        LeafNode node = (LeafNode) sibling;
-        keys.addAll(node.keys);
-        values.addAll(node.values);
-        next = node.next;
+    public void merge(Node paramNode) {
+        LeafNode selectedNode = (LeafNode) paramNode;
+        keys.addAll(selectedNode.keys);
+        values.addAll(selectedNode.values);
+        next = selectedNode.next;
     }
 
     public int compare(int a, int b)
@@ -68,7 +76,7 @@ public class LeafNode extends Node {
         {
             return -1;
         }
-        else if ( a >  b )
+        else if ( a > b )
         {
             return 1;
         }
@@ -79,53 +87,74 @@ public class LeafNode extends Node {
     }
 
     @Override
-	public	TreeSet<Integer> getRange(int key1, int key2) {
-		    TreeSet<Integer> result = new TreeSet<Integer>();
-			LeafNode node = this;
-			while (node != null) {
-				Iterator<Integer> kIt = node.keys.iterator();
-				Iterator<Integer> vIt = node.values.iterator();
-				while (kIt.hasNext()) {
-					int key = kIt.next();
-                    int value = vIt.next();
-                    int cmp1 = compare(key, key1);
-                    // int cmp1 = key.compareTo(key1);
-                    int cmp2 = compare(key, key2);
-                    // int cmp2 = key.compareTo(key2);
-                    if (cmp1 >= 0 && cmp2 <= 0) {
-                        result.add(value);
-                    }
-					else if (cmp2 >= 0 || cmp2 > 0)
-						return result;
-				}
-				node = node.next;
-			}
-			return result;
-		}
+	public TreeSet<Integer> getRange(int key1, int key2) {
+        TreeSet<Integer> result = new TreeSet<Integer>();
+        LeafNode node = this;
+        while (node != null) {
+            for(int i=0; i<node.keys.size(); i++) {
+                // int cmp1 = compare(node.keys.get(i), key1);
+                // int cmp2 = compare(node.keys.get(i), key2);
+                if (compare(node.keys.get(i), key1) >= 0 && compare(node.keys.get(i), key2) <= 0) {
+                    result.add(node.values.get(i));
+                } else if (compare(node.keys.get(i), key2) >= 0 || compare(node.keys.get(i), key2) > 0) {
+                    return result;
+                }
+            }
+            // Iterator<Integer> selectedKeys = node.keys.iterator();
+            // Iterator<Integer> selectedValues = node.values.iterator();
+            // while (selectedKeys.hasNext()) {
+            // 	int key = selectedKeys.next();
+            //     int value = selectedValues.next();
+            //     int cmp1 = compare(key, key1);
+            //     // int cmp1 = key.compareTo(key1);
+            //     int cmp2 = compare(key, key2);
+            //     // int cmp2 = key.compareTo(key2);
+            //     if (cmp1 >= 0 && cmp2 <= 0) {
+            //         result.add(value);
+            //     }
+            // 	else if (cmp2 >= 0 || cmp2 > 0)
+            // 		return result;
+            // }
+            node = node.next;
+        }
+        return result;
+    }
 
+    public void clearKeys(int x, int y) {
+        keys.subList(x, y).clear();
+        values.subList(x, y).clear();
+    }
 
     @Override
     public Node split() {
-        LeafNode sibling = new LeafNode();
-        int from = (size() + 1) / 2, to = size();
-        sibling.keys.addAll(keys.subList(from, to));
-        sibling.values.addAll(values.subList(from, to));
+        LeafNode nearByNode = new LeafNode();
+        nearByNode.keys.addAll(keys.subList((size() + 1) / 2, size()));
+        nearByNode.values.addAll(values.subList((size() + 1) / 2, size()));
 
-        keys.subList(from, to).clear();
-        values.subList(from, to).clear();
-
-        sibling.next = next;
-        next = sibling;
-        return sibling;
+        clearKeys((size() + 1) / 2, size());
+    
+        nearByNode.next = next;
+        next = nearByNode;
+        return nearByNode;
     }
 
     @Override
     public boolean isOverflow() {
-        return values.size() > BPTree.Order - 1;
+        if(values.size() > BPTree.Order-1) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
     @Override
     public boolean isUnderflow() {
-        return values.size() < BPTree.Order / 2;
+        if (values.size() < BPTree.Order / 2) {
+            return true;
+        } 
+        else {
+            return false;
+        }
     }
 }
