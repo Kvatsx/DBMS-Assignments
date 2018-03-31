@@ -35,9 +35,10 @@ public class Test {
         System.out.println("BPlusTree\n" + bt);
         bt.Insert(10, 109);
         System.out.println("BPlusTree\n" + bt);
-        // bt.Delete(1);
-        // bt.Delete(4);
-        // bt.Delete(3);
+        bt.Delete(1);
+        System.out.println("BPlusTree DELETE\n" + bt);
+        bt.Delete(4);
+        bt.Delete(3);
         System.out.println(bt.Search(0));
         System.out.println(bt.Search(6));
         System.out.println(bt.Search(9));        
