@@ -13,24 +13,24 @@ public class BPTree implements Serializable{
 
     public int search(int key) {
         // System.out.println(key instanceof String);
-        return Root.getValue(key);
+        return Root.getVal(key);
     }
 
     public void insert(int key, int value) {
-        Root.insertValue(key, value);
+        Root.Insert(key, value);
     }
 
     public void delete(int key) {
-        Root.deleteValue(key);
+        Root.Delete(key);
     }
 
     public TreeSet<Integer> searchRange(int key1, int key2) {
-        return Root.getRange(key1, key2);
+        return Root.Range(key1, key2);
     }
 
     public void printAll()
     {
-        LeafNode node = (LeafNode) Root.getFirstLeafNode();
+        LeafNode node = (LeafNode) Root.getNode();
         TreeSet<Integer> al = new TreeSet<Integer>();
         do {
             // System.out.println("\nNodes Values\n"+node.values+"\n");

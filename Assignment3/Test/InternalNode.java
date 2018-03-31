@@ -9,21 +9,21 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public int getValue(int key) {
-        return getChild(key).getValue(key);
+    public int getVal(int key) {
+        return getChild(key).getVal(key);
     }
 
     @Override
-    public LeafNode getFirstLeafNode() {
-        return children.get(0).getFirstLeafNode();
+    public LeafNode getNode() {
+        return children.get(0).getNode();
     }
 
     @Override
-    public void deleteValue(int key) {
+    public void Delete(int key) {
         Node child = getChild(key);
         // System.out.println("Child.keys: "+ child.keys);
-        child.deleteValue(key);
-        if (child.isUnderflow()) {
+        child.Delete(key);
+        if (child.checkValidity() == 2) {
             Node l;
             Node r;
 
@@ -37,11 +37,11 @@ public class InternalNode extends Node {
             }
             // System.out.print("Left: " + l+" || ");
             // System.out.println("Right: " + r);
-            l.merge(r);
-            deleteChild(r.getFirstLeafKey());
-            if (l.isOverflow()) {
-                Node sibling = l.split();
-                insertChild(sibling.getFirstLeafKey(), sibling);
+            l.Merge(r);
+            deleteChild(r.getFKey());
+            if (l.checkValidity() == 1) {
+                Node sibling = l.Split();
+                insertChild(sibling.getFKey(), sibling);
             }
             if (BPTree.Root.size() == 0)
                 BPTree.Root = l;
@@ -49,17 +49,17 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public void insertValue(int key, int value) {
+    public void Insert(int key, int value) {
         Node child = getChild(key);
-        child.insertValue(key, value);
-        if (child.isOverflow()) {
-            Node sibling = child.split();
-            insertChild(sibling.getFirstLeafKey(), sibling);
+        child.Insert(key, value);
+        if (child.checkValidity() == 1) {
+            Node sibling = child.Split();
+            insertChild(sibling.getFKey(), sibling);
         }
-        if (BPTree.Root.isOverflow()) {
-            Node sibling = split();
+        if (BPTree.Root.checkValidity() == 1) {
+            Node sibling = Split();
             InternalNode newRoot = new InternalNode();
-            newRoot.keys.add(sibling.getFirstLeafKey());
+            newRoot.keys.add(sibling.getFKey());
             newRoot.children.add(this);
             newRoot.children.add(sibling);
             BPTree.Root = newRoot;
@@ -67,19 +67,19 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public int getFirstLeafKey() {
-        return children.get(0).getFirstLeafKey();
+    public int getFKey() {
+        return children.get(0).getFKey();
     }  
 
     @Override
-	public TreeSet<Integer> getRange(int key1, int key2) {
-		return getChild(key1).getRange(key1, key2);
+	public TreeSet<Integer> Range(int key1, int key2) {
+		return getChild(key1).Range(key1, key2);
 }
 
     @Override
-    public void merge(Node sibling) {
+    public void Merge(Node sibling) {
         InternalNode node = (InternalNode) sibling;
-        keys.add(node.getFirstLeafKey());
+        keys.add(node.getFKey());
         // System.out.println("Keys: "+keys);
         keys.addAll(node.keys);
         // System.out.println("Keys: "+keys);
@@ -88,7 +88,7 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public Node split() {
+    public Node Split() {
         InternalNode temp = new InternalNode();
         temp.keys.addAll(keys.subList(size() / 2 + 1, size()));
         temp.children.addAll(children.subList(size() / 2 + 1, size() + 1));
@@ -99,15 +99,23 @@ public class InternalNode extends Node {
         return temp;
     }
 
+    /**
+     * 1: If overflow
+     * 2: If underflow
+     * 0: If valid
+     */
     @Override
-    public boolean isOverflow() {
-        return children.size() > BPTree.Order;
+    public int checkValidity() {
+        if (children.size() > BPTree.Order) {
+            return 1;
+        }
+        if (children.size() < (BPTree.Order+1) / 2) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 
-    @Override
-    public boolean isUnderflow() {
-        return children.size() < (BPTree.Order + 1) / 2;
-    }
 
     public Node getChild(int key) {
         int foundIndex = Collections.binarySearch(keys, key);

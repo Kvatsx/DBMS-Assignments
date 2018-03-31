@@ -2,32 +2,22 @@ import java.util.*;
 
 public abstract class Node {
     public List<Integer> keys;
+    
+    public abstract void Delete(int key);
+    public abstract void Insert(int key, int value);
+    public abstract int checkValidity();
+    public abstract Node Split();
+    public abstract int getFKey();
+    public abstract LeafNode getNode();    
+    public abstract void Merge(Node sibling);
+    public abstract TreeSet<Integer> Range(int key1, int key2);
+    public abstract int getVal(int key);
+    
+    public String toString() {
+        return keys.toString();
+    }
 
     public int size() {
         return keys.size();
-    }
-
-    public abstract int getValue(int key);
-
-    public abstract void deleteValue(int key);
-
-    public abstract void insertValue(int key, int value);
-
-    public abstract int getFirstLeafKey();
-
-    public abstract LeafNode getFirstLeafNode();    
-
-    public abstract TreeSet<Integer> getRange(int key1, int key2);
-
-    public abstract void merge(Node sibling);
-
-    public abstract Node split();
-
-    public abstract boolean isOverflow();
-
-    public abstract boolean isUnderflow();
-
-    public String toString() {
-        return keys.toString();
     }
 }
