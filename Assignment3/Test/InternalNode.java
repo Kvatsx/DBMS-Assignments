@@ -20,8 +20,19 @@ public class InternalNode extends Node {
         if (child.isUnderflow()) {
             Node childLeftSibling = getChildLeftSibling(key);
             Node childRightSibling = getChildRightSibling(key);
-            Node left = childLeftSibling != null ? childLeftSibling : child;
-            Node right = childLeftSibling != null ? child : childRightSibling;
+            Node left;
+            Node right;
+
+            if (childLeftSibling == null) {
+                left = child;
+                right = childRightSibling;
+            }
+            else {
+                left = childLeftSibling;
+                right = child;
+            }
+            // Node left = childLeftSibling != null ? childLeftSibling : child;
+            // Node right = childLeftSibling != null ? child : childRightSibling;
             System.out.println("Right: " + right);
             System.out.println("Left: " + left);
             left.merge(right);

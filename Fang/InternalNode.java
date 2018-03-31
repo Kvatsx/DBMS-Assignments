@@ -6,6 +6,8 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import javax.swing.JComboBox.KeySelectionManager;
+
 public class InternalNode extends Node {
     List<Node> children;
 
@@ -54,14 +56,21 @@ public class InternalNode extends Node {
         {
             Node left_child = getChild_Left_sibling(key);
             Node right_child = getChild_Right_sibling(key);
-            if ( left_child == null )
-            {
+            // if ( left_child == null )
+            // {
+            //     left_child = child_node;
+            // }
+            // if ( right_child != null )
+            // {
+            //     right_child = child_node;
+            // }
+
+            if (left_child == null) {
                 left_child = child_node;
-            }
-            if ( right_child != null )
-            {
+            } else {
                 right_child = child_node;
             }
+
             System.out.println("Right: " + right_child);
             System.out.println("Left: " + left_child);
             left_child.Merge(right_child);
@@ -121,24 +130,7 @@ public class InternalNode extends Node {
 
     public Node getChild(int key)
     {
-        int index = -1;
-        boolean foundKey = false;
-        int lastKeyValue = -1;
-        for ( int i=0; i<keys.size(); i++ )
-        {
-            if ( keys.get(i) == key )
-            {
-                index = i;
-                foundKey = true;
-                break;
-            }
-            lastKeyValue = keys.get(i);
-        }
-        if(!foundKey) {
-            if(lastKeyValue < key) {
-                index = -1*(keys.size()+1);
-            }
-        }
+        int index = Collections.binarySearch(keys, key);
         if ( index >= 0 )
         {
             index += 1;
@@ -199,34 +191,7 @@ public class InternalNode extends Node {
 
     public Node getChild_Left_sibling(int key)
     {
-        int index = -1;
-        boolean foundKey = false;
-        int lastKeyValue = -1;
-        for ( int i=0; i<keys.size(); i++ )
-        {
-            if ( keys.get(i) == key )
-            {
-                index = i;
-                foundKey = true;
-                break;
-            }
-            lastKeyValue = keys.get(i);
-        }
-        if(!foundKey) {
-            if(lastKeyValue < key) {
-                index = -1*(keys.size()+1);
-            }
-        }
-        if ( index >= 0 )
-        {
-            index += 1;
-        }
-        else
-        {
-            index = index*(-1) - 1;
-        }
-
-        System.out.println("Child Index Left: " + index);
+        int index = Collections.binarySearch(keys, key);
 
         if(index > 0) {
             System.out.println("Children LEFT: " + children.get(index - 1));
@@ -238,22 +203,7 @@ public class InternalNode extends Node {
     public Node getChild_Right_sibling(int key)
     {
         
-        int index = -1;
-        boolean foundKey = false;
-        int lastKeyValue = -1;
-        for (int i = 0; i < keys.size(); i++) {
-            if (keys.get(i) == key) {
-                index = i;
-                foundKey = true;
-                break;
-            }
-            lastKeyValue = keys.get(i);
-        }
-        if (!foundKey) {
-            if (lastKeyValue < key) {
-                index = -1 * (keys.size() + 1);
-            }
-        }
+        int index = Collections.binarySearch(keys, key);
         if (index >= 0) {
             index += 1;
         } else {
