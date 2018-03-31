@@ -139,7 +139,10 @@ public class BPTree implements Serializable{
         for ( int i=0; i<data.size(); i++ )
         {
             Data e = data.get(i);
-            insert(Integer.valueOf(e.getInstructorId()), i);
+            if ( e.getValidityTag().compareTo("0000") != 0 )
+            {
+                insert(Integer.valueOf(e.getInstructorId()), i);
+            }
         }
         createCSV(data, "local_record.csv");
     }
@@ -178,6 +181,7 @@ public class BPTree implements Serializable{
         // System.out.print("Please Enter Order for B+Tree: ");
         // int order = Reader.nextInt();
         // init();
+        // To Start from begining comment down below code and uncomment init() method.*************
         BPTree bt = new BPTree();
         System.out.println("Order of the Tree is 10");
         bt.data = deserialize();
@@ -187,9 +191,10 @@ public class BPTree implements Serializable{
             System.out.println("1) Find");
             System.out.println("2) Print All");
             System.out.println("3) Find Range");
-            System.out.println("4) Insert");
-            System.out.println("5) Delete");
-            System.out.println("6) Exit\n");
+            System.out.println("4) Print All values for a key");
+            System.out.println("5) Insert");
+            System.out.println("6) Delete");
+            System.out.println("7) Exit\n");
             int input = Reader.nextInt();
             if ( input == 1 )
             {
@@ -219,7 +224,15 @@ public class BPTree implements Serializable{
                     System.out.println(bt.data.get(itr.next()));
                 }
             }
-            else if ( input == 4 )
+            else if ( input == 4 ) 
+            {
+                // Since Keys are unique there will be only one data.
+                System.out.print("Enter the key for which you want to print all data: ");
+                int key = Reader.nextInt();
+                int out = bt.search(key);
+                System.out.println(bt.data.get(out));
+            }
+            else if ( input == 5 )
             {
                 System.out.println("Enter Record Details: ");
                 System.out.print("Enter Instructor ID: ");
@@ -239,8 +252,9 @@ public class BPTree implements Serializable{
 
                 file.delete();
                 serialize(bt.data);
+                createCSV(bt.data, "local_record.csv");
             }
-            else if ( input == 5 )
+            else if ( input == 6 )
             {
                 System.out.print("Enter the key: ");
                 int key = Reader.nextInt();
@@ -254,8 +268,8 @@ public class BPTree implements Serializable{
                         break;
                     }
                 }
-                createCSV(bt.data, "local_record.csv");
                 serialize(bt.data);
+                createCSV(bt.data, "local_record.csv");
             }
             else
             {
