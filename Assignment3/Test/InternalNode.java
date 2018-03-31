@@ -4,17 +4,17 @@ public class InternalNode extends Node {
     public List<Node> children;
 
     public InternalNode() {
-        this.keys = new ArrayList<Integer>();
+        this.keys = new ArrayList<String>();
         this.children = new ArrayList<Node>();
     }
 
     @Override
-    public int getValue(int key) {
+    public int getValue(String key) {
         return getChild(key).getValue(key);
     }
 
     @Override
-    public void deleteValue(int key) {
+    public void deleteValue(String key) {
         Node child = getChild(key);
         child.deleteValue(key);
         if (child.isUnderflow()) {
@@ -36,7 +36,7 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public void insertValue(int key, int value) {
+    public void insertValue(String key, int value) {
         Node child = getChild(key);
         child.insertValue(key, value);
         if (child.isOverflow()) {
@@ -54,12 +54,18 @@ public class InternalNode extends Node {
     }
 
     @Override
-    public int getFirstLeafKey() {
+    public String getFirstLeafKey() {
         return children.get(0).getFirstLeafKey();
     }
 
     @Override
-	public List<Integer> getRange(int key1, int key2) {
+    public LeafNode getFirstLeafNode() {
+        return children.get(0).getFirstLeafNode();
+    }    
+    
+
+    @Override
+	public List<Integer> getRange(String key1, String key2) {
 		return getChild(key1).getRange(key1, key2);
 }
 
@@ -95,14 +101,14 @@ public class InternalNode extends Node {
         return children.size() < (BPTree.Order + 1) / 2;
     }
 
-    public Node getChild(int key) {
+    public Node getChild(String key) {
         int loc = Collections.binarySearch(keys, key);
         int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
         return children.get(childIndex);
     }
 
-    public void deleteChild(int key) {
-            int loc = Collections.binarySearch(keys, key);
+    public void deleteChild(String key) {
+        int loc = Collections.binarySearch(keys, key);
         System.out.println("Delete Index: " + loc);
         System.out.println("Key To Find: " + key);
         if (loc >= 0) {
@@ -111,7 +117,7 @@ public class InternalNode extends Node {
         }
     }
 
-    public void insertChild(int key, Node child) {
+    public void insertChild(String key, Node child) {
         int loc = Collections.binarySearch(keys, key);
         int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
         if (loc >= 0) {
@@ -122,7 +128,7 @@ public class InternalNode extends Node {
         }
     }
 
-    public Node getChildLeftSibling(int key) {
+    public Node getChildLeftSibling(String key) {
         int loc = Collections.binarySearch(keys, key);
         int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
         System.out.println("Child Index Left: " + childIndex);
@@ -134,7 +140,7 @@ public class InternalNode extends Node {
         return null;
     }
 
-    public Node getChildRightSibling(int key) {
+    public Node getChildRightSibling(String key) {
         int loc = Collections.binarySearch(keys, key);
         int childIndex = loc >= 0 ? loc + 1 : -loc - 1;
         System.out.println("Child Index Right: " + childIndex);
