@@ -91,7 +91,7 @@ public class InternalNode extends Node {
     }
 
     public void clearValues(int x, int y) {
-        keys.subList(x, y).clear();
+        values.subList(x, y).clear();
     }
 
     @Override
