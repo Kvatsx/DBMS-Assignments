@@ -21,3 +21,5 @@ clean:
 	rm LeafNode.class
 	rm BPTree.class
 	rm Data.class
+	rm Reader.class
+	rm local_record.csv

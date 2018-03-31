@@ -5,18 +5,18 @@ public class LeafNode extends Node {
     public LeafNode next;
 
     public LeafNode() {
-        keys = new ArrayList<String>();
+        keys = new ArrayList<Integer>();
         values = new ArrayList<Integer>();
     }
 
     @Override
-    public int getValue(String key) {
+    public int getValue(int key) {
         int loc = Collections.binarySearch(keys, key);
         return loc >= 0 ? values.get(loc) : -1;
     }
 
     @Override
-    public void deleteValue(String key) {
+    public void deleteValue(int key) {
         int loc = Collections.binarySearch(keys, key);
         if (loc >= 0) {
             keys.remove(loc);
@@ -25,7 +25,7 @@ public class LeafNode extends Node {
     }
 
     @Override
-    public void insertValue(String key, int value) {
+    public void insertValue(int key, int value) {
         int loc = Collections.binarySearch(keys, key);
         int valueIndex = loc >= 0 ? loc : -loc - 1;
         if (loc >= 0) {
@@ -45,7 +45,7 @@ public class LeafNode extends Node {
     }
 
     @Override
-    public String getFirstLeafKey() {
+    public int getFirstLeafKey() {
         return keys.get(0);
     }
 
@@ -79,19 +79,19 @@ public class LeafNode extends Node {
     }
 
     @Override
-	public	List<Integer> getRange(String key1, String key2) {
-			List<Integer> result = new LinkedList<Integer>();
+	public	TreeSet<Integer> getRange(int key1, int key2) {
+		    TreeSet<Integer> result = new TreeSet<Integer>();
 			LeafNode node = this;
 			while (node != null) {
-				Iterator<String> kIt = node.keys.iterator();
+				Iterator<Integer> kIt = node.keys.iterator();
 				Iterator<Integer> vIt = node.values.iterator();
 				while (kIt.hasNext()) {
-					String key = kIt.next();
+					int key = kIt.next();
                     int value = vIt.next();
-                    // int cmp1 = compare(key, key1);
-                    int cmp1 = key.compareTo(key1);
-                    // int cmp2 = compare(key, key2);
-                    int cmp2 = key.compareTo(key2);
+                    int cmp1 = compare(key, key1);
+                    // int cmp1 = key.compareTo(key1);
+                    int cmp2 = compare(key, key2);
+                    // int cmp2 = key.compareTo(key2);
                     if (cmp1 >= 0 && cmp2 <= 0) {
                         result.add(value);
                     }

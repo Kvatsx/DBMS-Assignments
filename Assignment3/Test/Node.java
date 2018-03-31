@@ -1,23 +1,23 @@
 import java.util.*;
 
 public abstract class Node {
-    public List<String> keys;
+    public List<Integer> keys;
 
     public int keyNumber() {
         return keys.size();
     }
 
-    public abstract int getValue(String key);
+    public abstract int getValue(int key);
 
-    public abstract void deleteValue(String key);
+    public abstract void deleteValue(int key);
 
-    public abstract void insertValue(String key, int value);
+    public abstract void insertValue(int key, int value);
 
-    public abstract String getFirstLeafKey();
+    public abstract int getFirstLeafKey();
 
     public abstract LeafNode getFirstLeafNode();    
 
-    public abstract List<Integer> getRange(String key1, String key2);
+    public abstract TreeSet<Integer> getRange(int key1, int key2);
 
     public abstract void merge(Node sibling);
 

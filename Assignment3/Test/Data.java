@@ -8,7 +8,7 @@ public class Data{
     private String Department;
     private long Salary;
 
-    public Data(String instructorID, String name, String department, String salary)
+    public Data(String instructorID, String name, String department, long salary)
     {
         if(instructorID.length() > 4) {
             this.InstructorID = instructorID.substring(0, 4);
@@ -31,7 +31,7 @@ public class Data{
             this.Department = department;
         }
 
-        if(salary.length() > 10) {
+        if(String.valueOf(salary).length() > 10) {
             this.Salary = Long.parseLong(String.valueOf(salary).substring(0, 10));
         }
         else {
@@ -51,7 +51,7 @@ public class Data{
 
     public String toString()
     {
-        String out = InstructorID + " " + Name + " " + Department + " " + String.valueOf(Salary) + "\n";
+        String out = InstructorID + " " + Name + " " + Department + " " + String.valueOf(Salary);
         return out;
     }
 
@@ -83,7 +83,7 @@ public class Data{
         return this.Salary;
     }
     
-    public void setSalary(String salary) {
+    public void setSalary(long salary) {
         this.Salary = Long.parseLong(String.valueOf(salary).substring(0, 10));
     }
 }
