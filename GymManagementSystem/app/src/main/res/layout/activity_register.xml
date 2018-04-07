@@ -43,11 +43,13 @@
         android:onClick="register"
         android:text="Register"/>
 
-    <TextView android:id="@+id/signup_text"
+    <TextView
+        android:id="@+id/signup_text"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="24dp"
-        android:text="Login Here"
-        android:gravity="center"/>
+        android:gravity="center"
+        android:onClick="redirectLogin"
+        android:text="Login Here" />
 
 </LinearLayout>

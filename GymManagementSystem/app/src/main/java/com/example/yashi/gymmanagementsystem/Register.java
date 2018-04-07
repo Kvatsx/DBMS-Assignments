@@ -1,6 +1,7 @@
 package com.example.yashi.gymmanagementsystem;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -54,5 +55,10 @@ public class Register extends AppCompatActivity {
 
         db.execSQL("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, email VARCHAR, password VARCHAR, join_date VARCHAR, user_type VARCHAR);");
         db.execSQL("INSERT INTO users VALUES(NULL, '" + name + "','" + email + "','" + password + "','" + currentDate + "','" + userType + "');");
+    }
+
+    public void redirectLogin(View view) {
+        Intent registerPage = new Intent(Register.this, Login.class);
+        startActivity(registerPage);
     }
 }
