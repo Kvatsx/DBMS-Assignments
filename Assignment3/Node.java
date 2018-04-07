@@ -1,18 +1,24 @@
-// Kaustav Vats (2016048)
-// Yashit Maheshwari (2016123)
+import java.util.*;
+import java.io.*;
 
-import java.util.ArrayList;
-
-public class Node<K extends Comparable<K>, T> {
-    protected boolean isLeafNode;
-    protected ArrayList<K> keys;
-
-    public boolean isOverflowed() {
-        return keys.size() > 2 * BPlusTree.D;
+public abstract class Node {
+    public List<Integer> keys;
+    
+    public abstract void Delete(int key);
+    public abstract void Insert(int key, int value);
+    public abstract int checkValidity();
+    public abstract Node Split();
+    public abstract int getFKey();
+    public abstract LeafNode getNode();    
+    public abstract void Merge(Node sibling);
+    public abstract TreeSet<Integer> Range(int key1, int key2);
+    public abstract int getVal(int key);
+    
+    public String toString() {
+        return keys.toString();
     }
 
-    public boolean isUnderflowed() {
-        return keys.size() < BPlusTree.D;
+    public int size() {
+        return keys.size();
     }
-
 }
