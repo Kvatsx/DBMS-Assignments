@@ -28,4 +28,14 @@
         android:onClick="viewProfileStaff"
         android:text="View Profile"/>
 
+    <Button
+        android:id="@+id/view_staff_button_customer"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="30dp"
+        android:onClick="viewAllStaff"
+        android:text="All Staff"/>
+
 </LinearLayout>

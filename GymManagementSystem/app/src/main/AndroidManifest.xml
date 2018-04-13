@@ -25,7 +25,8 @@
         <activity android:name=".UpdateCustomerProfile" />
         <activity android:name=".ViewCustomerProfile" />
         <activity android:name=".UpdateStaffProfile" />
-        <activity android:name=".ViewStaffProfile"></activity>
+        <activity android:name=".ViewStaffProfile" />
+        <activity android:name=".ViewAllStaff"></activity>
     </application>
 
 </manifest>

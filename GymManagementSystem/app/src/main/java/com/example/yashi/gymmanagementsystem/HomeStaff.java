@@ -43,4 +43,9 @@ public class HomeStaff extends AppCompatActivity {
         viewProfileIntent.putExtra("userId",userId);
         startActivity(viewProfileIntent);
     }
+
+    public void viewAllStaff(View view) {
+        Intent viewProfileIntent = new Intent(HomeStaff.this, ViewAllStaff.class);
+        startActivity(viewProfileIntent);
+    }
 }
