@@ -44,8 +44,23 @@ public class HomeStaff extends AppCompatActivity {
         startActivity(viewProfileIntent);
     }
 
+    public void viewAllCustomers(View view) {
+        Intent viewCustomersIntent = new Intent(HomeStaff.this, ViewAllCustomers.class);
+        startActivity(viewCustomersIntent);
+    }
+
     public void viewAllStaff(View view) {
-        Intent viewProfileIntent = new Intent(HomeStaff.this, ViewAllStaff.class);
-        startActivity(viewProfileIntent);
+        Intent viewStaffIntent = new Intent(HomeStaff.this, ViewAllStaff.class);
+        startActivity(viewStaffIntent);
+    }
+
+    public void addEquipmentFunction(View view) {
+        Intent addEquipmentIntent = new Intent(HomeStaff.this, AddEquipment.class);
+        startActivity(addEquipmentIntent);
+    }
+
+    public void viewEquipmentFunction(View view) {
+        Intent viewEquipmentIntent = new Intent(HomeStaff.this, ViewEquipment.class);
+        startActivity(viewEquipmentIntent);
     }
 }

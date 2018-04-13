@@ -31,10 +31,22 @@ public class Helper {
     public int totat_columns_customers = 6;
 
 //    Staff Table Indexes
+
     public int staff_id = 0;
     public int staff_user_id = 1;
     public int staff_address = 2;
     public int staff_salary = 3;
 
     public int totat_columns_staff = 4;
+
+//    Equipment Table Indexes
+
+    public int equipment_id = 0;
+    public int equipment_name = 1;
+    public int equipment_price = 2;
+    public int equipment_date = 3;
+    public int equipment_type = 4;
+
+    public int totat_columns_equipment = 5;
+
 }
