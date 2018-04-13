@@ -14,6 +14,7 @@ import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
 
+    private Helper helper = new Helper();
     private SQLiteDatabase db;
 
     private EditText nameEdittext;
@@ -31,7 +32,7 @@ public class Register extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
-        db = openOrCreateDatabase("dbFile",MODE_PRIVATE,null);
+        db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 
         nameEdittext = (EditText) findViewById(R.id.name_edit_text);
         emailEdittext = (EditText) findViewById(R.id.email_edit_text);

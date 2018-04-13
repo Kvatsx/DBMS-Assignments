@@ -21,7 +21,9 @@
         <activity android:name=".Login" />
         <activity android:name=".Register" />
         <activity android:name=".HomeCustomer" />
-        <activity android:name=".HomeStaff"></activity>
+        <activity android:name=".HomeStaff" />
+        <activity android:name=".UpdateCustomerProfile" />
+        <activity android:name=".ViewCustomerProfile"></activity>
     </application>
 
 </manifest>

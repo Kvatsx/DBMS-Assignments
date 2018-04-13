@@ -24,7 +24,7 @@ public class Login extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        db = openOrCreateDatabase("dbFile",MODE_PRIVATE,null);
+        db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 
         emailEdittext = (EditText) findViewById(R.id.email_edit_text);
         passwordEdittext = (EditText) findViewById(R.id.password_edit_text);
@@ -33,17 +33,19 @@ public class Login extends AppCompatActivity {
     public void login(View view) {
         email = emailEdittext.getText().toString();
         password = passwordEdittext.getText().toString();
-
-        Cursor resultSet = db.rawQuery("SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'",null);
+        String query = "SELECT * FROM users WHERE email = '" + email + "' AND password = '" + password + "'";
+        Cursor resultSet = db.rawQuery(query,null);
         if(resultSet.getCount() > 0) {
             resultSet.moveToFirst();
-            String userType = resultSet.getString(helper.user_user_type);
+            String userType = resultSet.getString(helper.users_user_type);
             if(userType.equals("Customer")) {
                 Intent customerIntent = new Intent(Login.this, HomeCustomer.class);
+                customerIntent.putExtra("query",query);
                 startActivity(customerIntent);
             }
             else {
                 Intent staffIntent = new Intent(Login.this, HomeStaff.class);
+                staffIntent.putExtra("query",query);
                 startActivity(staffIntent);
             }
         }
