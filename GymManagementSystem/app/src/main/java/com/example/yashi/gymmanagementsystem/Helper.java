@@ -17,7 +17,9 @@ public class Helper {
     public int users_join_date = 4;
     public int users_user_type = 5;
 
-//    Customer Table Indexes
+    public int totat_columns_users = 6;
+
+//    Customers Table Indexes
 
     public int customers_id = 0;
     public int customers_user_id = 1;
@@ -26,5 +28,13 @@ public class Helper {
     public int customers_age = 4;
     public int customers_weight = 5;
 
+    public int totat_columns_customers = 6;
 
+//    Staff Table Indexes
+    public int staff_id = 0;
+    public int staff_user_id = 1;
+    public int staff_address = 2;
+    public int staff_salary = 3;
+
+    public int totat_columns_staff = 4;
 }

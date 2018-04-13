@@ -19,7 +19,7 @@ public class HomeCustomer extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home_customer);
-        this.setTitle("Welcome, Customer");
+        this.setTitle("Welcome, Customer!");
 
         db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 

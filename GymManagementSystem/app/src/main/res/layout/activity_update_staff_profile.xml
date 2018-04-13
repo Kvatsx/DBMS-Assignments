@@ -8,24 +8,26 @@
     android:paddingRight="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <Button
-        android:id="@+id/update_profile_button_customer"
-        android:layout_width="fill_parent"
+    <EditText android:id="@+id/address_edit_text"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
-        android:onClick="updateProfileStaff"
-        android:text="Update Profile"/>
+        android:inputType="text"
+        android:hint="Address" />
+
+    <EditText android:id="@+id/salary_edit_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:hint="Salary"/>
 
     <Button
-        android:id="@+id/view_profile_button_customer"
+        android:id="@+id/login_button"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_marginTop="20dp"
         android:layout_marginBottom="30dp"
-        android:onClick="viewProfileStaff"
-        android:text="View Profile"/>
+        android:onClick="updateProfileStaffFunc"
+        android:text="Update"/>
 
 </LinearLayout>

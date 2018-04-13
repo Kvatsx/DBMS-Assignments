@@ -52,8 +52,6 @@ public class UpdateCustomerProfile extends AppCompatActivity {
 //        membershipPlan = Integer.parseInt(membershipPlanSpinner.getSelectedItem().toString());
         membershipPlan = "1";
 
-        @SuppressLint("SimpleDateFormat") String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
         db.execSQL("CREATE TABLE IF NOT EXISTS customers(id INTEGER PRIMARY KEY AUTOINCREMENT, user_id INTEGER, membership_plan_id INTEGER, address VARCHAR, age INTEGER, weight INTEGER);");
         db.execSQL("INSERT INTO customers VALUES(NULL, " + userId + "," + membershipPlan + ",'" + address + "'," + age + "," + weight + ");");
     }
