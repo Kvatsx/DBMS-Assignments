@@ -3,8 +3,10 @@ package com.example.yashi.gymmanagementsystem;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.nfc.Tag;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -15,6 +17,7 @@ import java.util.Calendar;
 
 public class Register extends AppCompatActivity {
 
+    private static final String TAG = "Register.class";
     private Helper helper = new Helper();
     private SQLiteDatabase db;
 
@@ -43,7 +46,6 @@ public class Register extends AppCompatActivity {
         String[] items = new String[]{"Customer", "Staff"};
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
         userTypeSpinner.setAdapter(adapter);
-
     }
 
     public void register(View view) {
@@ -53,7 +55,7 @@ public class Register extends AppCompatActivity {
         userType = userTypeSpinner.getSelectedItem().toString();
 
         @SuppressLint("SimpleDateFormat") String currentDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(Calendar.getInstance().getTime());
-
+//        Log.d(TAG, name+" "+email+" "+password+" "+userType);
         db.execSQL("CREATE TABLE IF NOT EXISTS users(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, email VARCHAR, password VARCHAR, join_date VARCHAR, user_type VARCHAR);");
         db.execSQL("INSERT INTO users VALUES(NULL, '" + name + "','" + email + "','" + password + "','" + currentDate + "','" + userType + "');");
     }

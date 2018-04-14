@@ -3,7 +3,7 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="125dp"
+    android:paddingTop="50dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -32,11 +32,11 @@
         android:id="@+id/view_staff_button_customer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:padding="10dp"
-        android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
         android:onClick="viewAllStaff"
-        android:text="All Staff"/>
+        android:padding="10dp"
+        android:text="All Staff" />
 
     <Button
         android:id="@+id/view_customer_button_customer"

@@ -32,10 +32,39 @@ public class ViewAllStaff extends AppCompatActivity {
         staffDetailsText = (TextView) findViewById(R.id.staff_details);
 
         Cursor resultSet = db.rawQuery(query,null);
-        if(resultSet.getCount() > 0) {
-//            resultSet.moveToFirst();
-//            userId = resultSet.getString(helper.users_id);
-            staffDetailsText.setText(DatabaseUtils.dumpCursorToString(resultSet));
+        String tableString = "";
+
+        if (resultSet.getCount() > 0 ){
+            resultSet.moveToFirst();
+            String[] columnNames2 = resultSet.getColumnNames();
+
+            do {
+                for (String name: columnNames2) {
+                    if ( name.equals("name") )
+                    {
+                        tableString += String.format("%s: %s\n", "Name", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("email") )
+                    {
+                        tableString += String.format("%s: %s\n", "Email ID", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("join_date"))
+                    {
+                        tableString += String.format("%s: %s\n", "Joining Date", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("address"))
+                    {
+                        tableString += String.format("%s: %s\n", "Address", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("salary"))
+                    {
+                        tableString += String.format("%s: %s\n", "Salary", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                }
+                tableString += "\n\n";
+
+            } while (resultSet.moveToNext());
+            staffDetailsText.setText(tableString);
         }
     }
 }

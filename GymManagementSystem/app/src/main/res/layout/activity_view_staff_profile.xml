@@ -3,7 +3,7 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="125dp"
+    android:paddingTop="50dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -20,9 +20,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <TextView android:id="@+id/address_text"
+    <TextView
+        android:id="@+id/address_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content" />
 
     <TextView android:id="@+id/salary_text"
         android:layout_width="match_parent"

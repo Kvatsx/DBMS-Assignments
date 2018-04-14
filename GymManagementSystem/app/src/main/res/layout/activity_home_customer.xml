@@ -3,7 +3,7 @@
 <LinearLayout android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="125dp"
+    android:paddingTop="120dp"
     android:paddingLeft="20dp"
     android:paddingRight="20dp"
     xmlns:android="http://schemas.android.com/apk/res/android">
@@ -13,8 +13,8 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:onClick="updateProfileButton"
         android:text="Update Profile"/>
 
@@ -23,9 +23,29 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginBottom="30dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:onClick="viewProfileButton"
         android:text="View Profile"/>
+
+    <Button
+        android:id="@+id/view_staff_button_customer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:onClick="viewAllStaff"
+        android:padding="10dp"
+        android:text="All Staff" />
+
+    <Button
+        android:id="@+id/view_equipment_button_customer2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:layout_marginTop="10dp"
+        android:onClick="viewEquipmentFunction"
+        android:padding="10dp"
+        android:text="View Equipments" />
 
 </LinearLayout>

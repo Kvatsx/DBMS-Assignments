@@ -32,10 +32,47 @@ public class ViewAllCustomers extends AppCompatActivity {
         customerDetailsText = (TextView) findViewById(R.id.customer_details);
 
         Cursor resultSet = db.rawQuery(query,null);
-        if(resultSet.getCount() > 0) {
-//            resultSet.moveToFirst();
-//            userId = resultSet.getString(helper.users_id);
-            customerDetailsText.setText(DatabaseUtils.dumpCursorToString(resultSet));
+        String tableString = "";
+
+        if (resultSet.getCount() > 0 ){
+            resultSet.moveToFirst();
+            String[] columnNames2 = resultSet.getColumnNames();
+
+            do {
+                for (String name: columnNames2) {
+                    if ( name.equals("name") )
+                    {
+                        tableString += String.format("%s: %s\n", "Name", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("age") )
+                    {
+                        tableString += String.format("%s: %s\n", "Age", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("weight") )
+                    {
+                        tableString += String.format("%s: %s\n", "Weight", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("email") )
+                    {
+                        tableString += String.format("%s: %s\n", "Email ID", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("join_date"))
+                    {
+                        tableString += String.format("%s: %s\n", "Joining Date", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("address"))
+                    {
+                        tableString += String.format("%s: %s\n", "Address", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("membership_plan_id"))
+                    {
+                        tableString += String.format("%s: %s\n", "Membership Plan", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                }
+                tableString += "\n\n";
+
+            } while (resultSet.moveToNext());
+            customerDetailsText.setText(tableString);
         }
 
     }

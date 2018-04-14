@@ -45,8 +45,8 @@ public class Helper {
     public int equipment_name = 1;
     public int equipment_price = 2;
     public int equipment_date = 3;
-    public int equipment_type = 4;
+    public int equipment_quantity = 4;
 
-    public int totat_columns_equipment = 5;
+//    public int totat_columns_equipment = 5;
 
 }

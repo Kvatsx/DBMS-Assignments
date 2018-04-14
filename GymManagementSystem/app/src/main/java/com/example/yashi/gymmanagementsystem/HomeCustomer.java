@@ -44,4 +44,14 @@ public class HomeCustomer extends AppCompatActivity {
         viewProfileIntent.putExtra("userId",userId);
         startActivity(viewProfileIntent);
     }
+
+    public void viewAllStaff(View view) {
+        Intent viewStaffIntent = new Intent(HomeCustomer.this, ViewAllStaff.class);
+        startActivity(viewStaffIntent);
+    }
+
+    public void viewEquipmentFunction(View view) {
+        Intent viewEquipmentIntent = new Intent(HomeCustomer.this, ViewEquipment.class);
+        startActivity(viewEquipmentIntent);
+    }
 }
