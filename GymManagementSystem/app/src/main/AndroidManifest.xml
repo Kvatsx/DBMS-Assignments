@@ -28,6 +28,7 @@
         <activity android:name=".ViewStaffProfile" />
         <activity android:name=".ViewAllStaff" />
         <activity android:name=".ViewAllCustomers" />
+        <activity android:name=".ViewCustomerExtention" />
         <activity android:name=".AddEquipment" />
         <activity android:name=".ViewEquipment"></activity>
     </application>

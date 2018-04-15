@@ -27,7 +27,7 @@ public class ViewAllCustomers extends AppCompatActivity {
 
         db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 
-        String query = "SELECT * FROM users INNER JOIN customers ON users.id = customers.user_id WHERE users.user_type = 'Customer'";
+        String query = this.getIntent().getStringExtra("query");
 
         customerDetailsText = (TextView) findViewById(R.id.customer_details);
 
@@ -67,6 +67,10 @@ public class ViewAllCustomers extends AppCompatActivity {
                     else if ( name.equals("membership_plan_id"))
                     {
                         tableString += String.format("%s: %s\n", "Membership Plan", resultSet.getString(resultSet.getColumnIndex(name)));
+                    }
+                    else if ( name.equals("duration") )
+                    {
+                        tableString += String.format("%s: %s\n", "Membership Plan Duration", resultSet.getString(resultSet.getColumnIndex(name)));
                     }
                 }
                 tableString += "\n\n";

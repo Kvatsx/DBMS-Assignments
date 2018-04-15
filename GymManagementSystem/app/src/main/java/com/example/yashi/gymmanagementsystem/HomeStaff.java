@@ -45,7 +45,7 @@ public class HomeStaff extends AppCompatActivity {
     }
 
     public void viewAllCustomers(View view) {
-        Intent viewCustomersIntent = new Intent(HomeStaff.this, ViewAllCustomers.class);
+        Intent viewCustomersIntent = new Intent(HomeStaff.this, ViewCustomerExtention.class);
         startActivity(viewCustomersIntent);
     }
 

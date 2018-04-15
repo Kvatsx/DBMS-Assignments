@@ -47,6 +47,16 @@ public class Helper {
     public int equipment_date = 3;
     public int equipment_quantity = 4;
 
-//    public int totat_columns_equipment = 5;
+    public int totat_columns_equipment = 5;
+
+//    Membership Plan Table indexes
+
+    public int membership_plan_id = 0;
+    public int membership_plan_name = 1;
+    public int membership_plan_duration = 2;
+    public int membership_plan_price = 3;
+    public int membership_plan_description = 4;
+
+    public int total_columns_membership_plan = 5;
 
 }

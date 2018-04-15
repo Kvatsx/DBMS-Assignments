@@ -26,6 +26,12 @@ public class Login extends AppCompatActivity {
 
         db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 
+        db.execSQL("CREATE TABLE IF NOT EXISTS membership_plan(id INTEGER PRIMARY KEY AUTOINCREMENT, title VARCHAR, duration VARCHAR, price VARCHAR, description VARCHAR);");
+        db.execSQL("INSERT INTO membership_plan(title, duration, price, description) VALUES('One Year Membership' ,'1 Year', '1000/-','One year membership Extendable');");
+        db.execSQL("INSERT INTO membership_plan(title, duration, price, description) VALUES('Two Year Membership','2 Year','1800/-','Two year membership Extendable');");
+        db.execSQL("INSERT INTO membership_plan(title, duration, price, description) VALUES('Three Year Membership','3 Year','2500/-','Three year membership Extendable');");
+        db.execSQL("INSERT INTO membership_plan(title, duration, price, description) VALUES('Five Year Membership','5 Year','4000/-','Five year membership Extendable');");
+
         emailEdittext = (EditText) findViewById(R.id.email_edit_text);
         passwordEdittext = (EditText) findViewById(R.id.password_edit_text);
     }

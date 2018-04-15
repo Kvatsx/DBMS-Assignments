@@ -16,7 +16,7 @@ public class AddEquipment extends AppCompatActivity {
     private EditText nameEdittext;
     private EditText priceEdittext;
     private EditText dateEdittext;
-    private Spinner quantitySpinner;
+    private EditText quantityEdittext;
 
     private String name;
     private String price;
@@ -34,11 +34,7 @@ public class AddEquipment extends AppCompatActivity {
         nameEdittext = (EditText) findViewById(R.id.name_edit_text);
         priceEdittext = (EditText) findViewById(R.id.price_edit_text);
         dateEdittext = (EditText) findViewById(R.id.date_edit_text);
-        quantitySpinner = (Spinner) findViewById(R.id.quantity_spinner);
-        String[] items = new String[]{"1", "2", "3", "4", "5", "6", "7", "8", "9", "10"};
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_dropdown_item, items);
-        quantitySpinner.setAdapter(adapter);
-        quantitySpinner.setSelection(0);
+        quantityEdittext = (EditText) findViewById(R.id.quantity_edit_text);
     }
 
     public void addItem(View view) {
@@ -46,7 +42,7 @@ public class AddEquipment extends AppCompatActivity {
         name = nameEdittext.getText().toString();
         price = priceEdittext.getText().toString();
         date = dateEdittext.getText().toString();
-        quantity = quantitySpinner.getSelectedItem().toString();
+        quantity = quantityEdittext.getText().toString();
 
         db.execSQL("CREATE TABLE IF NOT EXISTS equipment(id INTEGER PRIMARY KEY AUTOINCREMENT, name VARCHAR, price VARCHAR, date VARCHAR, quantity VARCHAR);");
         db.execSQL("INSERT INTO equipment VALUES(NULL, '" + name + "','" + price + "','" + date + "','" + quantity + "');");
