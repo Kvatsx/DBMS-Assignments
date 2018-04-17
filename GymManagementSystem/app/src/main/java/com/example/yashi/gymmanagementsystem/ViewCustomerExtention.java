@@ -48,27 +48,29 @@ public class ViewCustomerExtention extends AppCompatActivity {
         String num;
         if ( membershipPlan.equals("All"))
         {
-            num = " > 0";
+            query = "SELECT * FROM users INNER JOIN customers ON users.id = customers.user_id INNER JOIN membership_plan ON customers.membership_plan_id = membership_plan.id";
         }
         else if ( membershipPlan.equals("1 Year") )
         {
             num = " = 1";
-
+            query += num;
         }
         else if ( membershipPlan.equals("2 Year") )
         {
             num = " = 2";
+            query += num;
         }
         else if ( membershipPlan.equals("3 Year") )
         {
             num = " = 3";
+            query += num;
         }
         else
         {
             num = " = 4";
+            query += num;
         }
 
-        query += num;
 
         Intent allcustomerIntent = new Intent(ViewCustomerExtention.this, ViewAllCustomers.class);
         allcustomerIntent.putExtra("query",query);

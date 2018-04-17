@@ -26,7 +26,7 @@ public class ViewEquipment extends AppCompatActivity {
 
         db = openOrCreateDatabase(helper.dbName,MODE_PRIVATE,null);
 
-        String query = "SELECT * FROM equipment WHERE quantity > 0";
+        String query = "SELECT * FROM equipment";
         String tableString = "";
 //        allequipment = (ScrollView) findViewById(R.id.allequipment);
         equipmentText = (TextView) findViewById(R.id.equipment_details);
